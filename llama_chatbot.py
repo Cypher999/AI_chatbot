@@ -3,7 +3,7 @@ import requests
 # URL API dan token
 API_URL = "https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct"
 headers = {
-    "Authorization": f"Bearer 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"
+    "Authorization": f"Bearer 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"
 }
 
 # Fungsi untuk query
@@ -20,7 +20,6 @@ def query(payload):
      <|eot_id|>
      <|start_header_id|>user<|end_header_id|> 
      berikut pertanyaannya: ```{query}```.
-      tolong berikan jawaban yang tepat dan akurat.
       <|eot_id|><|start_header_id|>assistant<|end_header_id|>"""
     prompt=prompt.replace("{query}",payload)
     payload = {
@@ -39,5 +38,5 @@ def query(payload):
 
 
 # Kirim permintaan
-result = query("who is your creator? answer in english")
+result = query("give me recomendation of youtube channel")
 print(result)

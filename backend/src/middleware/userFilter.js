@@ -1,6 +1,5 @@
-const jwt = require('jsonwebtoken');
 module.exports = async (req, res, next) => {
-  if(req.user_role=="admin"){
+  if(req.user_role=="user"||req.user_role=="admin"){
     next();
   }
   else{

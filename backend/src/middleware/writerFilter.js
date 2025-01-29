@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const models=__require("db/models/index");
 module.exports = async (req, res, next) => {
-  if(req.user_type=="W"){
+  if(req.user_role=="W"){
     next();
   }
   else{
