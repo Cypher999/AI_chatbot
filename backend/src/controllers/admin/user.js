@@ -102,7 +102,7 @@ const updatePassword=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'password has been updated'});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':user});
+        return res.status(500).json({status:'error','message':user});
     }
 }
 module.exports={index,updatePassword,readOne};

@@ -125,8 +125,10 @@ class PublicRouter{
         this.router=exp.Router()
         this.botType=__require("controllers/public/botType")
         this.chat=__require("controllers/public/chat")
+        this.auth=__require("controllers/public/auth")
         this.router.use("/bot-type",this.botTypeRoute())
         this.router.use("/chat",this.chatRoute())
+        this.router.use("/auth",this.authRoute())
     }
     botTypeRoute=()=>{
         let route=exp.Router();
@@ -136,9 +138,14 @@ class PublicRouter{
     }
     chatRoute=()=>{
         let route=exp.Router();
-        route.post('/',this.chat.index)
+        route.post('/:botTypeId',this.chat.index)
         return route
-    }    
+    }  
+    authRoute=()=>{
+        let route=exp.Router();
+        route.post('/',this.auth.login)
+        return route
+    }   
 }
 const route=exp.Router();
 // const admin_router=new AdminRouter();

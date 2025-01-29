@@ -167,7 +167,7 @@ const create=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'data has been added'});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':article});
+        return res.status(500).json({status:'error','message':article});
     }
 }
 const update=async(req,res)=>{
@@ -242,7 +242,7 @@ const update=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'data has been updated'});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':article});
+        return res.status(500).json({status:'error','message':article});
     }
 }
 module.exports={index,create,update,readOne,del};

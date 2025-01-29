@@ -20,7 +20,6 @@ enum UserType {
 
 model users{
   id            Int   @id @default(autoincrement())
-  name          String?
   username      String?  @unique
   password String?
   photo String? @default("man.jpg")
@@ -31,7 +30,8 @@ model users{
 model botType{
   id Int @id @default(autoincrement())
   userId Int 
-  context String
+  name String
+  context String @db.LongText
   enable Boolean
   createdAt DateTime @default(now())
   user users @relation(fields:[userId],references: [id])

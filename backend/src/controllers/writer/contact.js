@@ -114,7 +114,7 @@ const create=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'data has been added',data:EB});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':EB});
+        return res.status(500).json({status:'error','message':EB});
     }
 }
 const update=async(req,res)=>{
@@ -148,7 +148,7 @@ const update=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'data has been updated',data:EB});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':EB});
+        return res.status(500).json({status:'error','message':EB});
     }
 }
 module.exports={index,create,update,readOne,del};

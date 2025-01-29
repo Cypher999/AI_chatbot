@@ -113,7 +113,7 @@ const updateData=async(req,res)=>{
             return res.status(200).json({code:200,status:'success','message':'data has been updated'});
         }
         else{
-            return res.status(500).json({code:500,status:'error','message':user});
+            return res.status(500).json({status:'error','message':user});
         }
     }
     return res.status(404).json({code:404,status:'error','message':'notfound'});
@@ -165,7 +165,7 @@ const updatePassword=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'password has been updated'});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':user});
+        return res.status(500).json({status:'error','message':user});
     }
 }
 const deleteSession=async (req,res)=>{

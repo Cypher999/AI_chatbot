@@ -1,7 +1,7 @@
 const bcrypt=require('bcrypt');
 const saltRounds=10;
 
-let hashPassword=function(plainText){
+let hash=function(plainText){
   return new Promise((resolve,reject)=>{
     bcrypt.hash(plainText, saltRounds, function (err, hash) {
       if(err){return reject(err)}
@@ -10,7 +10,7 @@ let hashPassword=function(plainText){
   })
 }
 
-let verifyPassword=function(plaintext,hash){
+let verify=function(plaintext,hash){
   return new Promise((resolve,reject)=>{
     bcrypt.compare(plaintext, hash, function (err, result) {
       if(err){return reject(err)}
@@ -19,4 +19,4 @@ let verifyPassword=function(plaintext,hash){
   })
 }
 
-module.exports={hashPassword,verifyPassword}
+module.exports={hash,verify}

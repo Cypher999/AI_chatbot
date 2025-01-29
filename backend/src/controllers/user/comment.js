@@ -77,7 +77,7 @@ const sendComment=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'comment has been sent'});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':user});
+        return res.status(500).json({status:'error','message':user});
     }
 }
 const deleteComment=async(req,res)=>{
@@ -194,7 +194,7 @@ const sendReply=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'reply has been sent'});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':user});
+        return res.status(500).json({status:'error','message':user});
     }
 }
 module.exports={sendComment,sendReply,deleteComment,deleteReply};

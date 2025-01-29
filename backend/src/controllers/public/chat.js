@@ -1,7 +1,8 @@
 const axios =require('axios');
+const botType=__require('utils/db/botType')
+const knowledge=__require('utils/db/knowledge')
 const joi=require('joi')
 const index=async (req,res)=>{
-    console.log(process.env.HUGGINGFACE_TOKEN)
     const validator = joi.object({
         prompt: joi.string()
           .required()
@@ -10,18 +11,19 @@ const index=async (req,res)=>{
           })
       });
     const { error } = validator.validate(req.body,{ abortEarly: false });
+    const botId=parseInt(req.params.botTypeId);;
+    const botData=await botType.getOne(botId)
+    if(!botData) return res.status(500).json({status:'error','message':'bot id not found'});
+    let knowledgeData=await knowledge.getBotId(botId)    
+    knowledgeData=JSON.stringify(knowledgeData.map(n=>({label:n.label,content:n.content})))
     if (error) {
         return res.status(500).json({code:500, status:'error',message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     }
     let prompt=`<|begin_of_text|><|start_header_id|>system<|end_header_id|>
-    anda adalah sebuah chatbot asisten untuk pertanyaan yang umum, dalam menjawab pertanyaan, anda harus menggunakan bahasa indonesia,
-    kecuali jika didalam pertanyaan tersebut, terdapat perintah untuk menggunakan bahasa sebaliknya,
-    berikut adalah informasi tambahan yang bisa anda pakai, dimana setiap informasi dibuat dalam bentuk json dengan dua objek, topik dan deskripsi :
-    [
-        {topik:nama pencipta anda,deskripsi:anda diciptakan oleh seseorang bernama ratskull, dengan menggunakan meta llama sebagai base model},
-        {topik:nama anda,deskripsi:anda bernama ratbot, adapaun nama tersebut berasal dari pencipta saya, ratskull },
-        {topik:channel youtube dari ratskull,deskripsi:pencipta anda memiliki channel youtube bernama r@tdev }
-    ]
+    ${botData.context}
+    berikut adalah informasi tambahan yang bisa anda pakai, 
+    dimana setiap informasi dibuat dalam bentuk json dengan dua objek, label dan content :
+    ${knowledgeData}
      <|eot_id|>
      <|start_header_id|>user<|end_header_id|> 
      berikut pertanyaannya: ${req.body.prompt}.
@@ -37,7 +39,8 @@ const index=async (req,res)=>{
         }
     }
     payload=JSON.stringify(payload)
-    const response = await axios.post(`https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct`,{
+    const response = await axios.post(`https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct`
+      ,{
         "inputs": prompt,
         "parameters": {
             "max_new_tokens": 5000,
@@ -60,8 +63,7 @@ const index=async (req,res)=>{
       })
       
     } else {
-      // reCAPTCHA failed
-      return res.status(500).json({code:500,status:'error','message':'reCAPTCHA verification failed. Please try again.'});
+      return res.status(500).json({status:'error','message':''});
     }
 }
 

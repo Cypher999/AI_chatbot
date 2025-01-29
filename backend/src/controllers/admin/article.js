@@ -294,7 +294,7 @@ const create=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'data has been added'});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':article});
+        return res.status(500).json({status:'error','message':article});
     }
 }
 const update=async(req,res)=>{
@@ -418,7 +418,7 @@ const update=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'data has been updated'});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':article});
+        return res.status(500).json({status:'error','message':article});
     }
 }
 const publish=async(req,res)=>{
@@ -434,7 +434,7 @@ const publish=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'article has been published'});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':article});
+        return res.status(500).json({status:'error','message':article});
     }
     
 }
@@ -451,7 +451,7 @@ const unpublish=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'article has been pulled back'});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':article});
+        return res.status(500).json({status:'error','message':article});
     }
     
 }
@@ -485,7 +485,7 @@ const deleteImage=async(req,res)=>{
         del.destroy();
         return res.status(200).json({code:200,status:'success',message:del});
     }
-    return res.status(500).json({code:500,status:'error',message:"error access"});
+    return res.status(500).json({status:'error',message:"error access"});
     
 }
 module.exports={index,create,update,publish,unpublish,readOne,prevOne,del,uploadImage,deleteImage};

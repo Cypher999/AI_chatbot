@@ -72,7 +72,7 @@ const update=async(req,res)=>{
         return res.status(200).json({code:200,status:'success','message':'data has been updated',data:conf});
     }
     else{
-        return res.status(500).json({code:500,status:'error','message':conf});
+        return res.status(500).json({status:'error','message':conf});
     }
 }
 module.exports={index,update};
