@@ -6,6 +6,4 @@ module.exports = async (req, res, next) => {
   else{
     return res.status(404).json({code:404,status:'error','message':'not found'})
   }
-  
-
 }

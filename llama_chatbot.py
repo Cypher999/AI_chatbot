@@ -9,7 +9,8 @@ headers = {
 # Fungsi untuk query
 def query(payload):
     prompt="""<|begin_of_text|><|start_header_id|>system<|end_header_id|>
-    anda adalah sebuah chatbot asisten untuk pertanyaan yang umum, dalam menjawab pertanyaan, anda harus menggunakan bahasa indonesia,
+    anda adalah sebuah chatbot asisten untuk pertanyaan yang umum, 
+    dalam menjawab pertanyaan, anda harus menggunakan bahasa indonesia,
     kecuali jika didalam pertanyaan tersebut, terdapat perintah untuk menggunakan bahasa sebaliknya,
     berikut adalah informasi tambahan yang bisa anda pakai, dimana setiap informasi dibuat dalam bentuk json dengan dua objek, topik dan deskripsi :
     [
@@ -38,5 +39,5 @@ def query(payload):
 
 
 # Kirim permintaan
-result = query("give me recomendation of youtube channel")
+result = query("nama pencipta anda")
 print(result)

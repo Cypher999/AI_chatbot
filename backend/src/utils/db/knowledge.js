@@ -38,4 +38,14 @@ const add=async (data)=>{
      return results;
  }
 
-module.exports={getAll,getOne,add,update,del,getBotId}
+ const countAll=async ()=>{
+    let data=await prisma.knowledge.count()
+    return data;
+}
+const countLabel=async (botTypeId,label)=>{
+    let data=await prisma.knowledge.count({
+        where : { botTypeId,label }
+    })
+    return data;
+}
+module.exports={getAll,getOne,add,update,del,getBotId,countAll,countLabel}

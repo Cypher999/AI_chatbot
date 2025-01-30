@@ -59,5 +59,16 @@ const add=async (data)=>{
      });
      return results;
  }
-
-module.exports={getAll,getOne,add,update,del,getUsername,checkUsername}
+ const countAll=async ()=>{
+    let data=await prisma.users.count()
+    return data;
+}
+const countUsername=async (username)=>{
+    let data=await prisma.users.count({
+        where : {
+            username
+        }
+    })
+    return data;
+}
+module.exports={getAll,getOne,add,update,del,getUsername,checkUsername,countAll,countUsername}

@@ -11,9 +11,19 @@ const getAll=async ()=>{
     })
     return data;
 }
+const countAll=async ()=>{
+    let data=await prisma.botType.count()
+    return data;
+}
 const getOne=async (id)=>{
     let data=await prisma.botType.findFirst({
         where : { id }
+    })
+    return data;
+}
+const countName=async (name)=>{
+    let data=await prisma.botType.count({
+        where : { name }
     })
     return data;
 }
@@ -34,4 +44,4 @@ const add=async (data)=>{
      });
      return results;
  }
-module.exports={getAll,getOne,add,update,del}
+module.exports={getAll,getOne,add,update,del,countAll,countName}

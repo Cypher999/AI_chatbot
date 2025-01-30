@@ -17,9 +17,13 @@ const login=async (req,res)=>{
     });
     const { error } = validator.validate(req.body,{ abortEarly: false });
     if (error) {
-        return res.status(500).json({code:500, status:'error',message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
+        return res.status(500).json({
+            code:500, 
+            status:'error',
+            message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     }
     const count=await users.checkUsername(req.body.username);
+    console.log(count)
     if(count<=0) return res.status(500).json({status:'error','message':'username not found'}); 
     const data = await users.getUsername(req.body.username);
     if (data) {

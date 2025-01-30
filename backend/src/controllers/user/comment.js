@@ -4,7 +4,6 @@ const models=__require("db/models/");
 const joi=require('joi');
 const generateRandom=__require("thirdparty/generateRandom")
 const uploads=__require("thirdparty/uploads")
-const { Op } = require('sequelize'); 
 
 const sendComment=async(req,res)=>{
     const validator = joi.object({
