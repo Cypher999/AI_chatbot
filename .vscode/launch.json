@@ -7,32 +7,13 @@
       "cwd": "${workspaceFolder}/backend",
       "command": "npm run dev",
       "type": "node-terminal",
-      // "env": {
-      //   "REFRESH_TOKEN_INTERVAL_TIME": 5000,
-      //   "EPIQ_HOST": "https://epiqfastcourts-dev-ha.babbobox.com"
-      // }
     },
     {
       "request": "launch",
       "name": "Frontend",
       "cwd": "${workspaceFolder}/frontend",
-      "command": "npm run start",
+      "command": "npm run dev",
       "type": "node-terminal",
-      // "env": {
-      //   "REFRESH_TOKEN_INTERVAL_TIME": 5000,
-      //   "EPIQ_HOST": "https://epiqfastcourts-dev-ha.babbobox.com"
-      // }
-    },
-    {
-      "request": "launch",
-      "name": "Socket",
-      "cwd": "${workspaceFolder}/socketHandler",
-      "command": "npm run dev-start",
-      "type": "node-terminal",
-      // "env": {
-      //   "REFRESH_TOKEN_INTERVAL_TIME": 5000,
-      //   "EPIQ_HOST": "https://epiqfastcourts-dev-ha.babbobox.com"
-      // }
     }
   ],
   "compounds": [
@@ -40,8 +21,7 @@
       "name": "All",
       "configurations": [
         "Backend",
-        "Frontend",
-        "Socket"
+        "Frontend"
       ],
       "stopAll": true
     }

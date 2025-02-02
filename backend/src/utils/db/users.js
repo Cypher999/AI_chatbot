@@ -25,6 +25,14 @@ const getUsername=async (username)=>{
     let data=await prisma.users.findFirst({
         where : { username }
     })
+    data._img='/img_user/man.jpg';
+    if(data.img!=null){
+        const filePath = path.join(process.cwd(), 'img/user', data.photo);
+        console.log(filePath)
+        if(fs.existsSync(filePath)){
+            data._img='/img_user/'+data.img
+        }
+    }
     return data;
 }
 
@@ -45,10 +53,18 @@ const add=async (data)=>{
  }
 
  const update=async (data,id)=>{
-    const results=await prisma.users.update({ data: {
-         ...data,
-         role:UserType[user.role]
-       },
+    const results=await prisma.users.update({ data: 
+        data.role
+        ?
+        {
+            ...data,
+            role:UserType[data.role]
+        }
+        :
+        {
+            ...data
+        }
+        ,
        where:{id} 
      });
      return results;
@@ -63,12 +79,4 @@ const add=async (data)=>{
     let data=await prisma.users.count()
     return data;
 }
-const countUsername=async (username)=>{
-    let data=await prisma.users.count({
-        where : {
-            username
-        }
-    })
-    return data;
-}
-module.exports={getAll,getOne,add,update,del,getUsername,checkUsername,countAll,countUsername}
+module.exports={getAll,getOne,add,update,del,getUsername,checkUsername,countAll}

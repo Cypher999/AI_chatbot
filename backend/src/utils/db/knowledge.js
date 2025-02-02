@@ -11,7 +11,16 @@ const getOne=async (id)=>{
     })
     return data;
 }
-
+const countByUserId=async (userId)=>{
+    let data=await prisma.knowledge.count({
+        where:{
+            botType:{
+                userId
+            }
+        }
+    })
+    return data;
+}
 const getBotId=async (botTypeId)=>{
     let data=await prisma.knowledge.findMany({
         where : { botTypeId }
@@ -48,4 +57,4 @@ const countLabel=async (botTypeId,label)=>{
     })
     return data;
 }
-module.exports={getAll,getOne,add,update,del,getBotId,countAll,countLabel}
+module.exports={getAll,countByUserId,getOne,add,update,del,getBotId,countAll,countLabel}

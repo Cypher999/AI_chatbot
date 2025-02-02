@@ -11,8 +11,31 @@ const getAll=async ()=>{
     })
     return data;
 }
+
+const getByUserId=async (userId)=>{
+    let data=await prisma.botType.findMany({
+        include:{
+            user:{
+                select:{
+                    username:true
+                }
+            }
+        },
+        where:{
+            userId
+        }
+    })
+    return data;
+}
 const countAll=async ()=>{
     let data=await prisma.botType.count()
+    return data;
+}
+
+const countByUserId=async (userId)=>{
+    let data=await prisma.botType.count({
+        where:{userId}
+    })
     return data;
 }
 const getOne=async (id)=>{
@@ -44,4 +67,4 @@ const add=async (data)=>{
      });
      return results;
  }
-module.exports={getAll,getOne,add,update,del,countAll,countName}
+module.exports={getAll,getOne,getByUserId,countByUserId,add,update,del,countAll,countName}

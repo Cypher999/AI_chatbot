@@ -14,6 +14,7 @@ const index=async (req,res)=>{
     const botId=parseInt(req.params.botTypeId);;
     const botData=await botType.getOne(botId)
     if(!botData) return res.status(500).json({status:'error','message':'bot id not found'});
+    if(!botData.enable) return res.status(500).json({status:'error','message':'bot is disabled by admin'});
     let knowledgeData=await knowledge.getBotId(botId)    
     knowledgeData=JSON.stringify(knowledgeData.map(n=>({label:n.label,content:n.content})))
     if (error) {
