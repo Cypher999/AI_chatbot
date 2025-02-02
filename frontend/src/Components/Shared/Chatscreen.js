@@ -7,7 +7,7 @@ import BotTypeModal from "./BotTypeModal";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight,faArrowDown } from "@fortawesome/free-solid-svg-icons";
 export default () => {
     const [botType,setBotType]=useState({
         id:'1',
@@ -79,7 +79,7 @@ export default () => {
                     <Spinner animation="border" variant="primary"/>
                     :
                     botType.name
-                }</h5>
+                } <FontAwesomeIcon icon={faArrowDown} size="1x"/></h5>
             </div>
             <div className="p-3" style={{ background: "white", borderRadius: "10px", height:'70vh',overflow:'scroll' }}>
                 {
@@ -132,8 +132,10 @@ export default () => {
                         onChange={(e)=>{
                             setPrompt(e.target.value)
                         }}
-                        onKeyPress={(e)=>{
-                            console.log(e.key)
+                        onKeyUp={(e)=>{
+                            if(e.key=="Enter"){
+                                sendData()
+                            }
                         }}
                         type="text" placeholder="Type something" />
                         <Button
