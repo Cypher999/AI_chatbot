@@ -33,7 +33,7 @@ const login=async (req,res)=>{
             user_id:data.id,
             user_role:data.role
         }, process.env.SECRET_KEY, { expiresIn: '30d' });
-        return res.status(200).json({status:'success',data:{accessToken}})      
+        return res.status(200).json({status:'success',data:{accessToken,role:data.role}})      
     } else {
         return res.status(500).json({status:'error','message':''});
     }

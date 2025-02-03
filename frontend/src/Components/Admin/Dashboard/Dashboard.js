@@ -49,7 +49,7 @@ const App = () => {
 
                 {/* Button */}
                 <a href="/admin/bot-type">
-                  <Button variant="primary">Read All Data</Button>j
+                  <Button variant="primary">Read All Data</Button>
                 </a>
               </Card.Body>
             </Card>
@@ -83,7 +83,7 @@ const App = () => {
 
                 {/* Button */}
                 <a href="/admin/users">
-                  <Button variant="primary">Read All Data</Button>j
+                  <Button variant="primary">Read All Data</Button>
                 </a>
               </Card.Body>
             </Card>
