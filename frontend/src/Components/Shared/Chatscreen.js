@@ -11,7 +11,7 @@ import { faArrowRight,faArrowDown } from "@fortawesome/free-solid-svg-icons";
 export default () => {
     const [botType,setBotType]=useState({
         id:'1',
-        name:'bobobot'
+        name:'-'
     })
     const [data,setData]=useState([]);
     const [prompt,setPrompt]=useState("");
@@ -19,7 +19,6 @@ export default () => {
     const [loadingBot,setLoadingBot]=useState(false);
     const [showBotTypeModal,setShowBotTypeModal]=useState(false)
     const readBotData=async()=>{
-        console.log(Cookies.get())
         setLoadingBot(true);
         let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'bot-type');
         req=req.data;

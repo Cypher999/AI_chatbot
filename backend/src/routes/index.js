@@ -130,6 +130,7 @@ class PublicRouter{
     }  
     authRoute=()=>{
         let route=exp.Router();
+        route.get('/',this.auth.checkUser)
         route.post('/',this.auth.login)
         return route
     }   

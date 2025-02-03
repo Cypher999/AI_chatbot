@@ -11,6 +11,7 @@ module.exports = async (req, res, next) => {
           console.log(err)
         }
         else {
+          console.log(data)
           req.user_id=data.user_id;
           req.user_role = data.user_role;        
         }

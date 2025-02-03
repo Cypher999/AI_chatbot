@@ -39,4 +39,16 @@ const login=async (req,res)=>{
     }
 }
 
-module.exports={login};
+const checkUser=async (req,res)=>{
+    if(req.user_id=="") return res.status(200).json({status:'success',data:{role:'public'}})  
+    const id=parseInt(req.user_id)
+    const data = await users.getOne(id);
+    if (data) {
+        data.password=null;
+        return res.status(200).json({status:'success',data})      
+    } else {
+        return res.status(500).json({status:'error','message':''});
+    }
+}
+
+module.exports={login,checkUser};

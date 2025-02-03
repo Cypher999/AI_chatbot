@@ -1,7 +1,8 @@
 "use client"
 import React, { useState } from "react";
 import { Container, Row, Col, Nav, Navbar, Button, Dropdown,Card } from "react-bootstrap";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome,faRobot,faUser } from "@fortawesome/free-solid-svg-icons";
 export default ({children}) => {
     const [showMenu, setShowMenu] = useState(false);
   
@@ -41,9 +42,18 @@ export default ({children}) => {
             className={`bg-light vh-100 p-3 ${showMenu ? "d-block" : "d-none d-md-block"}`}
           >
             <Nav className="flex-column">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#about">Bot Types</Nav.Link>
-              <Nav.Link href="#services">Users</Nav.Link>
+              <Nav.Link href="/admin" className="border border-1 rounded-3 mb-2">
+                <FontAwesomeIcon icon={faHome}/>
+                <span className="ms-3">Home</span>
+              </Nav.Link>
+              <Nav.Link href="/admin/bot-type" className="border border-1 rounded-3 mb-2">
+                <FontAwesomeIcon icon={faRobot}/>
+                <span className="ms-3">Bot Types</span>
+              </Nav.Link>
+              <Nav.Link href="/admin/users" className="border border-1 rounded-3 mb-2">
+                <FontAwesomeIcon icon={faUser}/>
+                <span className="ms-3">Users</span>
+              </Nav.Link>
             </Nav>
           </Col>
   
