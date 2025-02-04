@@ -62,6 +62,7 @@ const add=async (data)=>{
      return results;
  }
  const del=async (id)=>{
+    console.log(id)
     const results=await prisma.botType.delete({
        where:{id} 
      });

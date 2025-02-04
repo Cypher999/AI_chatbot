@@ -39,5 +39,5 @@ def query(payload):
 
 
 # Kirim permintaan
-result = query("nama pencipta anda")
+result = query("saya berencana untuk membuat sebuah server rumahan sederhana yang bisa diakses secara online menggunakan teknik tunneling, apakah saya bisa melakukannya dengan cloudflare ? sertakan langkah-langkahnya jika saya menggunakan sistem linux")
 print(result)

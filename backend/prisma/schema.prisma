@@ -34,7 +34,7 @@ model botType{
   context String @db.LongText
   enable Boolean
   createdAt DateTime @default(now())
-  user users @relation(fields:[userId],references: [id])
+  user users @relation(fields:[userId],references: [id],onDelete: Cascade, onUpdate: Cascade )
   knowledge knowledge[]
 }
 
@@ -44,5 +44,5 @@ model knowledge{
   label String
   content String
   createdAt DateTime @default(now())
-  botType botType @relation(fields:[botTypeId],references: [id])
+  botType botType @relation(fields:[botTypeId],references: [id] ,onDelete: Cascade, onUpdate: Cascade)
 }
