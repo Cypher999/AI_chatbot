@@ -9,7 +9,7 @@ export default ({
     modalData,
     setModalData,
     onSubmit,
-    botId
+    agentId
 })=>{
     const formHandle=(e)=>{
         setModalData(n=>({
@@ -26,7 +26,7 @@ export default ({
         fr.append('content',modalData.content)
         let token=Cookies.get('auth-token')
         try {
-            let req=await axios.put(process.env.NEXT_PUBLIC_API_URL+'admin/knowledge/'+botId+'/'+modalData.id,fr,{
+            let req=await axios.put(process.env.NEXT_PUBLIC_API_URL+'admin/knowledge/'+agentId+'/'+modalData.id,fr,{
                 headers:{
                   'content-type':'multipart/form-data',
                   authorization:"bearer "+token

@@ -25,14 +25,14 @@ export default ({
         fr.append('context',modalData.context)
         let token=Cookies.get('auth-token')
         try {
-            let req=await axios.post(process.env.NEXT_PUBLIC_API_URL+'admin/bot-type',fr,{
+            let req=await axios.post(process.env.NEXT_PUBLIC_API_URL+'admin/agent',fr,{
                 headers:{
                   'content-type':'multipart/form-data',
                   authorization:"bearer "+token
                 }
               })
               req=req.data;
-              alert('bot data has been saved')
+              alert('agent has been saved')
               await onSubmit()
           } catch (error) {
             setError(error.response.data.message)

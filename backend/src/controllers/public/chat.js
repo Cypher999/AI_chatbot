@@ -1,5 +1,5 @@
 const axios =require('axios');
-const botType=__require('utils/db/botType')
+const agent=__require('utils/db/agent')
 const knowledge=__require('utils/db/knowledge')
 const joi=require('joi')
 const index=async (req,res)=>{
@@ -11,17 +11,19 @@ const index=async (req,res)=>{
           })
       });
     const { error } = validator.validate(req.body,{ abortEarly: false });
-    const botId=parseInt(req.params.botTypeId);;
-    const botData=await botType.getOne(botId)
-    if(!botData) return res.status(500).json({status:'error','message':'bot id not found'});
-    if(!botData.enable) return res.status(500).json({status:'error','message':'bot is disabled by admin'});
-    let knowledgeData=await knowledge.getBotId(botId)    
+    const agentId=parseInt(req.params.agentId);;
+    const agentData=await agent.getOne(agentId)
+    if(!agentData) return res.status(500).json({status:'error','message':'bot id not found'});
+    if(!agentData.enable) return res.status(500).json({status:'error','message':'bot is disabled by admin'});
+    let knowledgeData=await knowledge.getAgentId(agentId)    
     knowledgeData=JSON.stringify(knowledgeData.map(n=>({label:n.label,content:n.content})))
     if (error) {
         return res.status(500).json({code:500, status:'error',message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     }
     let prompt=`<|begin_of_text|><|start_header_id|>system<|end_header_id|>
-    ${botData.context}
+    Nama anda adalah ${agentData.name} , namun anda tidak perlu menyebutkan nama anda jika tidak ada yang menanyakan
+    identitas anda, 
+    ${agentData.context}
     berikut adalah informasi tambahan yang bisa anda pakai, 
     dimana setiap informasi dibuat dalam bentuk json dengan dua objek, label dan content :
     ${knowledgeData}

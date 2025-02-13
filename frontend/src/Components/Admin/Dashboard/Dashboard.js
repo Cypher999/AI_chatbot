@@ -6,7 +6,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 const App = () => {
   const [data,setData]=useState({
-    botType:0,
+    agent:0,
     users:0,
     knowledge:0
   })
@@ -39,16 +39,16 @@ const App = () => {
           <Col xs={11} md={5} lg={3}>
             <Card>
               <Card.Header>
-                Bot Types
+                Agent
               </Card.Header>
               {/* Card Body */}
               <Card.Body>
 
                 {/* Card Text */}
-                <h2>{data.botType}</h2>
+                <h2>{data.agent}</h2>
 
                 {/* Button */}
-                <a href="/admin/bot-type">
+                <a href="/admin/agent">
                   <Button variant="primary">Read All Data</Button>
                 </a>
               </Card.Body>

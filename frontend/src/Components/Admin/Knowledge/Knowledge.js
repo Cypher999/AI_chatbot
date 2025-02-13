@@ -9,7 +9,7 @@ import ModalEdit from "./ModalEdit";
 export default ({id})=> {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
-  const [botName,setBotName]=useState("")
+  const [AgentName,setBotName]=useState("")
   const [modalAddData,setModalAddData]=useState({
     label:"",
     content:""
@@ -37,7 +37,7 @@ export default ({id})=> {
   const readBot=async()=>{
     setLoading(true);
     let token=Cookies.get('auth-token')
-    let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'admin/bot-type/'+id,{
+    let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'admin/agent/'+id,{
       headers:{
         authorization:"bearer "+token
       }
@@ -76,13 +76,13 @@ export default ({id})=> {
   return (
     <Container className="mt-5">
       <h1 className="mb-4">Knowledge Data</h1>
-      <b>Bot Type : {botName}</b>
+      <b>Agent : {AgentName}</b>
       {/* Button to Open Modal */}
       <div className="d-flex align-items-center justify-content-start">
         <Button className="m-2" variant="primary" onClick={()=>{setShowModalAdd(true)}}>
           Insert Data
         </Button>
-        <a href="/admin/bot-type">
+        <a href="/admin/agent">
         <Button variant="success">
           Go Back
         </Button>
@@ -121,7 +121,7 @@ export default ({id})=> {
         setShowModal={setShowModalAdd}
         modalData={modalAddData}
         setModalData={setModalAddData}
-        botId={id}
+        agentId={id}
         onSubmit={async()=>{
             setModalAddData({
                 content:"",
@@ -133,7 +133,7 @@ export default ({id})=> {
         }}
       />
       <ModalEdit
-      botId={id}
+      agentId={id}
         showModal={showModalEdit}
         setShowModal={setShowModalEdit}
         modalData={modalEditData}

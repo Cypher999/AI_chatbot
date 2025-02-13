@@ -25,14 +25,14 @@ export default ({
         fr.append('context',modalData.context)
         let token=Cookies.get('auth-token')
         try {
-            let req=await axios.put(process.env.NEXT_PUBLIC_API_URL+'admin/bot-type/'+modalData.id,fr,{
+            let req=await axios.put(process.env.NEXT_PUBLIC_API_URL+'admin/agent/'+modalData.id,fr,{
                 headers:{
                   'content-type':'multipart/form-data',
                   authorization:"bearer "+token
                 }
               })
               req=req.data;
-              alert('bot data has been updated')
+              alert('agent has been updated')
               await onSubmit()
           } catch (error) {
             setError(error.response.data.message)

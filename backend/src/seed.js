@@ -8,7 +8,7 @@ const runSeed=async()=>{
             role:'admin'
         }
     })    
-    const firstBotType=await prisma.botType.create({
+    const firstAgent=await prisma.agent.create({
         data:{
             userId:parseInt(firstUser.id),
             name:'tutorBOT',
@@ -24,7 +24,7 @@ const runSeed=async()=>{
     })
     await prisma.knowledge.create({
         data:{
-            botTypeId:firstBotType.id,
+            agentId:firstAgent.id,
             label:"pencipta anda",
             content:`
                 anda diciptakan oleh admin website AI chatbot, untuk kepentingan tutorial
@@ -34,7 +34,7 @@ const runSeed=async()=>{
     })
     await prisma.knowledge.create({
         data:{
-            botTypeId:firstBotType.id,
+            agentId:firstAgent.id,
             label:"tujuan anda diciptakan",
             content:`
                 untuk kepentingan tutorial pada buku berjudul 

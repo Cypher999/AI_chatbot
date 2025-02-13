@@ -1,6 +1,6 @@
 const prisma=__require('utils/prismaClient')
 const getAll=async ()=>{
-    let data=await prisma.botType.findMany({
+    let data=await prisma.agent.findMany({
         include:{
             user:{
                 select:{
@@ -13,7 +13,7 @@ const getAll=async ()=>{
 }
 
 const getByUserId=async (userId)=>{
-    let data=await prisma.botType.findMany({
+    let data=await prisma.agent.findMany({
         include:{
             user:{
                 select:{
@@ -28,42 +28,42 @@ const getByUserId=async (userId)=>{
     return data;
 }
 const countAll=async ()=>{
-    let data=await prisma.botType.count()
+    let data=await prisma.agent.count()
     return data;
 }
 
 const countByUserId=async (userId)=>{
-    let data=await prisma.botType.count({
+    let data=await prisma.agent.count({
         where:{userId}
     })
     return data;
 }
 const getOne=async (id)=>{
-    let data=await prisma.botType.findFirst({
+    let data=await prisma.agent.findFirst({
         where : { id }
     })
     return data;
 }
 const countName=async (name)=>{
-    let data=await prisma.botType.count({
+    let data=await prisma.agent.count({
         where : { name }
     })
     return data;
 }
 const add=async (data)=>{
-    const newUser=await prisma.botType.create({ data
+    const newUser=await prisma.agent.create({ data
      });
      return newUser;
  }
  const update=async (data,id)=>{
-    const results=await prisma.botType.update({ data,
+    const results=await prisma.agent.update({ data,
        where:{id} 
      });
      return results;
  }
  const del=async (id)=>{
     console.log(id)
-    const results=await prisma.botType.delete({
+    const results=await prisma.agent.delete({
        where:{id} 
      });
      return results;

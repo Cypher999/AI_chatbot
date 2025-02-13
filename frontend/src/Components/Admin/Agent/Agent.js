@@ -24,7 +24,7 @@ export default ()=> {
   const readData=async()=>{
     setLoading(true);
     let token=Cookies.get('auth-token')
-    let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'admin/bot-type',{
+    let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'admin/agent',{
       headers:{
         authorization:"bearer "+token
       }
@@ -35,7 +35,7 @@ export default ()=> {
   }
   const readOne=async(id)=>{
     let token=Cookies.get('auth-token')
-    let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'admin/bot-type/'+id,{
+    let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'admin/agent/'+id,{
       headers:{
         authorization:"bearer "+token
       }
@@ -48,7 +48,7 @@ export default ()=> {
   }
   const del=async(id)=>{
     let token=Cookies.get('auth-token')
-    let req=await axios.delete(process.env.NEXT_PUBLIC_API_URL+'admin/bot-type/'+id,{
+    let req=await axios.delete(process.env.NEXT_PUBLIC_API_URL+'admin/agent/'+id,{
       headers:{
         authorization:"bearer "+token
       }
@@ -61,7 +61,7 @@ export default ()=> {
   },[])
   return (
     <Container className="mt-5">
-      <h1 className="mb-4">Bot Type</h1>
+      <h1 className="mb-4">Agent</h1>
 
       {/* Button to Open Modal */}
       <Button variant="primary" onClick={()=>{setShowModalAdd(true)}}>

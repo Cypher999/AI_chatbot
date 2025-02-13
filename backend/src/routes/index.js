@@ -5,13 +5,13 @@ class AdminRouter{
     constructor(){
         this.router=exp.Router()
         this.home=__require("controllers/admin/home")
-        this.botType=__require("controllers/admin/botType")
+        this.agent=__require("controllers/admin/agent")
         this.knowledge=__require("controllers/admin/knowledge")  
         this.user=__require("controllers/admin/user")
         this.personal=__require("controllers/admin/personal") 
         this.router.use(adminFilter)
         this.router.use("/home",this.homeRoute())
-        this.router.use("/bot-type",this.botTypeRoute())
+        this.router.use("/agent",this.agentRoute())
         this.router.use("/knowledge",this.knowledgeRoute())
         this.router.use("/personal",this.personalRoute())
         this.router.use("/user",this.userRoute())
@@ -21,15 +21,15 @@ class AdminRouter{
         route.get('/',this.home.index)
         return route
     }
-    botTypeRoute=()=>{
+    agentRoute=()=>{
         let route=exp.Router();        
-        route.get('/',this.botType.index)
-        route.get('/:id',this.botType.getOne)
-        route.post('/',this.botType.create)
-        route.put('/:id',this.botType.update)
-        route.put('/enable/:id',this.botType.enableBot)
-        route.put('/disable/:id',this.botType.disableBot)
-        route.delete('/:id',this.botType.del)
+        route.get('/',this.agent.index)
+        route.get('/:id',this.agent.getOne)
+        route.post('/',this.agent.create)
+        route.put('/:id',this.agent.update)
+        route.put('/enable/:id',this.agent.enableBot)
+        route.put('/disable/:id',this.agent.disableBot)
+        route.delete('/:id',this.agent.del)
         return route
     }
     personalRoute=()=>{
@@ -41,11 +41,11 @@ class AdminRouter{
     }
     knowledgeRoute=()=>{
         let route=exp.Router();        
-        route.get('/:botTypeId',this.knowledge.index)
-        route.get('/:botTypeId/:id',this.knowledge.getOne)
-        route.post('/:botTypeId',this.knowledge.create)
-        route.put('/:botTypeId/:id',this.knowledge.update)
-        route.delete('/:botTypeId/:id',this.knowledge.del)
+        route.get('/:agentId',this.knowledge.index)
+        route.get('/:agentId/:id',this.knowledge.getOne)
+        route.post('/:agentId',this.knowledge.create)
+        route.put('/:agentId/:id',this.knowledge.update)
+        route.delete('/:agentId/:id',this.knowledge.del)
         return route
     }
     userRoute=()=>{
@@ -64,12 +64,12 @@ class UserRouter{
     constructor(){
         this.router=exp.Router()
         this.home=__require("controllers/user/home")
-        this.botType=__require("controllers/user/botType")
+        this.agent=__require("controllers/user/agent")
         this.knowledge=__require("controllers/user/knowledge")  
         this.personal=__require("controllers/user/personal") 
         this.router.use(userFilter)
         this.router.use("/home",this.homeRoute())
-        this.router.use("/bot-type",this.botTypeRoute())
+        this.router.use("/agent",this.agentRoute())
         this.router.use("/knowledge",this.knowledgeRoute())
         this.router.use("/personal",this.personalRoute())
     }
@@ -78,15 +78,15 @@ class UserRouter{
         route.get('/',this.home.index)
         return route
     }
-    botTypeRoute=()=>{
+    agentRoute=()=>{
         let route=exp.Router();        
-        route.get('/',this.botType.index)
-        route.get('/:id',this.botType.getOne)
-        route.post('/',this.botType.create)
-        route.put('/:id',this.botType.update)
-        route.put('/enable/:id',this.botType.enableBot)
-        route.put('/disable/:id',this.botType.disableBot)
-        route.delete('/:id',this.botType.del)
+        route.get('/',this.agent.index)
+        route.get('/:id',this.agent.getOne)
+        route.post('/',this.agent.create)
+        route.put('/:id',this.agent.update)
+        route.put('/enable/:id',this.agent.enableBot)
+        route.put('/disable/:id',this.agent.disableBot)
+        route.delete('/:id',this.agent.del)
         return route
     }
     personalRoute=()=>{
@@ -98,11 +98,11 @@ class UserRouter{
     }
     knowledgeRoute=()=>{
         let route=exp.Router();        
-        route.get('/:botTypeId',this.knowledge.index)
-        route.get('/:botTypeId/:id',this.knowledge.getOne)
-        route.post('/:botTypeId',this.knowledge.create)
-        route.put('/:botTypeId/:id',this.knowledge.update)
-        route.delete('/:botTypeId/:id',this.knowledge.del)
+        route.get('/:agentId',this.knowledge.index)
+        route.get('/:agentId/:id',this.knowledge.getOne)
+        route.post('/:agentId',this.knowledge.create)
+        route.put('/:agentId/:id',this.knowledge.update)
+        route.delete('/:agentId/:id',this.knowledge.del)
         return route
     }
 }
@@ -110,22 +110,22 @@ class UserRouter{
 class PublicRouter{
     constructor(){
         this.router=exp.Router()
-        this.botType=__require("controllers/public/botType")
+        this.agent=__require("controllers/public/agent")
         this.chat=__require("controllers/public/chat")
         this.auth=__require("controllers/public/auth")
-        this.router.use("/bot-type",this.botTypeRoute())
+        this.router.use("/agent",this.agentRoute())
         this.router.use("/chat",this.chatRoute())
         this.router.use("/auth",this.authRoute())
     }
-    botTypeRoute=()=>{
+    agentRoute=()=>{
         let route=exp.Router();
-        route.get('/',this.botType.index)
-        route.get('/:id',this.botType.getOne)
+        route.get('/',this.agent.index)
+        route.get('/:id',this.agent.getOne)
         return route
     }
     chatRoute=()=>{
         let route=exp.Router();
-        route.post('/:botTypeId',this.chat.index)
+        route.post('/:agentId',this.chat.index)
         return route
     }  
     authRoute=()=>{

@@ -1,10 +1,10 @@
 const userUtils=__require('utils/db/users')
-const botUtils=__require('utils/db/botType')
+const agentUtils=__require('utils/db/agent')
 const knowledgeUtils=__require('utils/db/knowledge')
 
 const index=async(req,res)=>{
     const data={
-        botType:await botUtils.countAll(),
+        agent:await agentUtils.countAll(),
         users:await userUtils.countAll(),
         knowledge:await knowledgeUtils.countAll()
     }

@@ -1,4 +1,4 @@
-import BotType from "@/Components/Admin/BotType/BotType"
+import Agent from "@/Components/Admin/Agent/Agent"
 import Knowledge from "@/Components/Admin/Knowledge/Knowledge"
 export default async ({params})=>{
     const id=(await params).id;

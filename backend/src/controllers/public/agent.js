@@ -1,6 +1,6 @@
-const botType=__require('utils/db/botType')
+const agent=__require('utils/db/agent')
 const index=async (req,res)=>{
-    const data = await botType.getAll();
+    const data = await agent.getAll();
     if (data) {
       return res.status(200).json({status:'success',data})
       
@@ -9,7 +9,7 @@ const index=async (req,res)=>{
     }
 }
 const getOne=async (req,res)=>{
-    const data = await botType.getOne(parseInt(req.params.id));
+    const data = await agent.getOne(parseInt(req.params.id));
     if (data) {
       return res.status(200).json({status:'success',data})
       

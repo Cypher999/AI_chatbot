@@ -1,4 +1,4 @@
-const botTypeUtils=__require('utils/db/botType')
+const agentUtils=__require('utils/db/agent')
 const knowledgeUtils=__require('utils/db/knowledge')
 const joi=require('joi')
 const validator = joi.object({
@@ -14,11 +14,11 @@ const validator = joi.object({
         })
 });
 const index=async(req,res)=>{
-    const botTypeId=parseInt(req.params.botTypeId);
-    const botTypeData=await botTypeUtils.getOne(botTypeId);
-    if (botTypeData==null) return res.status(404).json({status:'error',
-        message:"bot type not found"})
-    const data=await knowledgeUtils.getBotId(botTypeId);
+    const agentId=parseInt(req.params.agentId);
+    const agentData=await agentUtils.getOne(agentId);
+    if (agentData==null) return res.status(404).json({status:'error',
+        message:"AI agent not found"})
+    const data=await knowledgeUtils.getAgentId(agentId);
     return res.status(200).json({status:'success',data})
 }
 
@@ -38,14 +38,14 @@ const create=async(req,res)=>{
             status:'error',
             message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     }
-    const botTypeId=parseInt(req.params.botTypeId);
-    const botTypeData=await botTypeUtils.getOne(botTypeId);
-    if (botTypeData==null) return res.status(404).json({status:'error',
-        message:"bot type not found"})
-    const checkName=await knowledgeUtils.countLabel(botTypeId,req.body.label);
+    const agentId=parseInt(req.params.agentId);
+    const agentData=await agentUtils.getOne(agentId);
+    if (agentData==null) return res.status(404).json({status:'error',
+        message:"AI agent not found"})
+    const checkName=await knowledgeUtils.countLabel(agentId,req.body.label);
     if(checkName>0) return res.status(500).json({status:'error',message:"name already used"})
     const result=await knowledgeUtils.add({
-        botTypeId:botTypeId,
+        agentId:agentId,
         label:req.body.label,
         content:req.body.content
     })
@@ -54,7 +54,7 @@ const create=async(req,res)=>{
 }
 
 const update=async(req,res)=>{
-    const botTypeId=parseInt(req.params.botTypeId);
+    const agentId=parseInt(req.params.agentId);
     const id=parseInt(req.params.id);
     const { error } = validator.validate(req.body,{ abortEarly: false });
     if (error) {
@@ -66,7 +66,7 @@ const update=async(req,res)=>{
     const oldData=await knowledgeUtils.getOne(id);
     if (oldData==null) return res.status(404).json({status:'error',
         message:"knowledge not found"})
-    const checkName=await knowledgeUtils.countLabel(botTypeId,req.body.label);
+    const checkName=await knowledgeUtils.countLabel(agentId,req.body.label);
     if(checkName>0&&oldData.label!=req.body.label) return res.status(500).json({status:'error',
         message:"label already used"})
     const result=await knowledgeUtils.update({

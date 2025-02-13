@@ -46,9 +46,9 @@ export default ({children}) => {
                 <FontAwesomeIcon icon={faHome}/>
                 <span className="ms-3">Home</span>
               </Nav.Link>
-              <Nav.Link href="/admin/bot-type" className="border border-1 rounded-3 mb-2">
+              <Nav.Link href="/admin/agent" className="border border-1 rounded-3 mb-2">
                 <FontAwesomeIcon icon={faRobot}/>
-                <span className="ms-3">Bot Types</span>
+                <span className="ms-3">Agent</span>
               </Nav.Link>
               <Nav.Link href="/admin/users" className="border border-1 rounded-3 mb-2">
                 <FontAwesomeIcon icon={faUser}/>

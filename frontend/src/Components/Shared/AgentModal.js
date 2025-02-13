@@ -5,14 +5,14 @@ import { useState,useEffect } from "react";
 export default ({
     showModal,
     setShowModal,
-    setBotType,
+    setAgent,
     setChatData
 })=>{
     const [data,setData]=useState([])
     const [loading,setLoading]=useState(true)
     const readData=async()=>{
         setLoading(true);
-        let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'bot-type');
+        let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'agent');
         req=req.data;
         if(req.status=="success"){
             setData(req.data);
@@ -25,7 +25,7 @@ export default ({
     return (
         <Modal show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
-            <Modal.Title>Select Bot Type</Modal.Title>
+            <Modal.Title>Select Agent</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {
@@ -39,7 +39,7 @@ export default ({
                         {
                             data.map((item,index)=>(
                                 <div onClick={()=>{
-                                    setBotType({
+                                    setAgent({
                                         id:item.id,
                                         name:item.name
                                     })
