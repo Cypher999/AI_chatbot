@@ -1,32 +1,40 @@
 const prisma=__require('utils/prismaClient')
 
-const getAll=async ()=>{
-    let data=await prisma.knowledge.findMany()
+const getMany=async (where=null)=>{
+    let data=null
+    if(where!=null){
+        data=await prisma.knowledge.findMany()
+    }
+    else{
+        await prisma.knowledge.findMany({where})
+    }
     return data;
 }
 
 const getOne=async (id)=>{
     let data=await prisma.knowledge.findFirst({
-        where : { id }
+        where 
     })
     return data;
 }
-const countByUserId=async (userId)=>{
-    let data=await prisma.knowledge.count({
-        where:{
-            agent:{
-                userId
+const count=async (where=null)=>{
+    let data=null;
+    if(where==null){
+        data=await prisma.knowledge.count({
+            where:{
+                agent:{
+                    userId
+                }
             }
-        }
-    })
+        })
+    }
+    else{
+        data=await prisma.knowledge.count({
+            where})
+    }
     return data;
 }
-const getAgentId=async (agentId)=>{
-    let data=await prisma.knowledge.findMany({
-        where : { agentId }
-    })
-    return data;
-}
+
 
 const add=async (data)=>{
     const newUser=await prisma.knowledge.create({ data
@@ -34,27 +42,17 @@ const add=async (data)=>{
      return newUser;
  }
 
- const update=async (data,id)=>{
+ const update=async (data,where)=>{
     const results=await prisma.knowledge.update({ data,
-       where:{id} 
+       where 
      });
      return results;
  }
- const del=async (id)=>{
+ const del=async (where)=>{
     const results=await prisma.knowledge.delete({
-       where:{id} 
+       where
      });
      return results;
  }
 
- const countAll=async ()=>{
-    let data=await prisma.knowledge.count()
-    return data;
-}
-const countLabel=async (agentId,label)=>{
-    let data=await prisma.knowledge.count({
-        where : { agentId,label }
-    })
-    return data;
-}
-module.exports={getAll,countByUserId,getOne,add,update,del,getAgentId,countAll,countLabel}
+module.exports={getMany,count,getOne,add,update,del}

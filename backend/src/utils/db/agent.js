@@ -1,71 +1,65 @@
 const prisma=__require('utils/prismaClient')
-const getAll=async ()=>{
-    let data=await prisma.agent.findMany({
-        include:{
-            user:{
-                select:{
-                    username:true
+const getMany=async (where=null)=>{
+    let data=null
+    if(where==null){
+        data=await prisma.agent.findMany({
+            include:{
+                user:{
+                    select:{
+                        username:true
+                    }
                 }
             }
-        }
-    })
+        })
+    }
+    else{
+        data=await prisma.agent.findMany({
+            include:{
+                user:{
+                    select:{
+                        username:true
+                    }
+                }
+            },
+            where
+        })
+    }
     return data;
 }
 
-const getByUserId=async (userId)=>{
-    let data=await prisma.agent.findMany({
-        include:{
-            user:{
-                select:{
-                    username:true
-                }
-            }
-        },
-        where:{
-            userId
-        }
-    })
-    return data;
-}
-const countAll=async ()=>{
-    let data=await prisma.agent.count()
+const count=async (where=null)=>{
+    let data=null
+    if(where==null){
+        data=await prisma.agent.count()
+    }
+    else{
+        data=await prisma.agent.count([where])
+    }
     return data;
 }
 
-const countByUserId=async (userId)=>{
-    let data=await prisma.agent.count({
-        where:{userId}
-    })
-    return data;
-}
-const getOne=async (id)=>{
+const getOne=async (where)=>{
     let data=await prisma.agent.findFirst({
-        where : { id }
+        where
     })
     return data;
 }
-const countName=async (name)=>{
-    let data=await prisma.agent.count({
-        where : { name }
-    })
-    return data;
-}
+
 const add=async (data)=>{
     const newUser=await prisma.agent.create({ data
      });
      return newUser;
  }
- const update=async (data,id)=>{
+ const update=async (data,where)=>{
     const results=await prisma.agent.update({ data,
-       where:{id} 
+       where
      });
      return results;
  }
- const del=async (id)=>{
-    console.log(id)
+ const del=async (where)=>{
     const results=await prisma.agent.delete({
-       where:{id} 
+       where
      });
      return results;
  }
-module.exports={getAll,getOne,getByUserId,countByUserId,add,update,del,countAll,countName}
+module.exports={getMany,getOne,add,update,del,count}

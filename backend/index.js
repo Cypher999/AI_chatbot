@@ -9,7 +9,7 @@ global.__base_url=function(url=""){
 }
 //
 const app=require('./src/app')
-
+console.log(process.cwd())
 app.listen(port,host,()=>{
     console.log(`server run on http://${host}:${port}`)
 });

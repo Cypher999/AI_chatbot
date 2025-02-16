@@ -1,8 +1,14 @@
 const prisma=__require('utils/prismaClient')
 const {UserType}=require('@prisma/client')
-const fs=require('fs')
+const {existsSync}=require('fs')
+const path=require('path');
 const getAll=async ()=>{
-    let data=await prisma.users.findMany()
+    let data=await prisma.users.findMany();
+    data.forEach((item,index)=>{
+            if(existsSync(path.join(process.cwd(),'/img/user/',item.photo))){
+                data[index]._photo=__base_url('/img-user/'+item.photo)
+            }
+        })
     return data;
 }
 
@@ -10,12 +16,12 @@ const getOne=async (id)=>{
     let data=await prisma.users.findFirst({
         where : { id }
     })
-    data._img='/img_user/man.jpg';
-    if(data.img!=null){
+    data._photo='/img_user/man.jpg';
+    if(data.photo!=null){
         const filePath = path.join(process.cwd(), 'img/user', data.photo);
-        console.log(filePath)
-        if(fs.existsSync(filePath)){
-            data._img='/img_user/'+data.img
+        if(existsSync(filePath)){
+            
+            data._photo=__base_url('/img_user/'+data.photo)
         }
     }
     return data;
@@ -25,12 +31,11 @@ const getUsername=async (username)=>{
     let data=await prisma.users.findFirst({
         where : { username }
     })
-    data._img='/img_user/man.jpg';
-    if(data.img!=null){
+    data._photo='/img_user/man.jpg';
+    if(data.photo!=null){
         const filePath = path.join(process.cwd(), 'img/user', data.photo);
-        console.log(filePath)
-        if(fs.existsSync(filePath)){
-            data._img='/img_user/'+data.img
+        if(existsSync(filePath)){
+            data._photo=__base_url('/img_user/'+data.photo)
         }
     }
     return data;
@@ -52,7 +57,7 @@ const add=async (data)=>{
      return newUser;
  }
 
- const update=async (data,id)=>{
+ const update=async (data,{id})=>{
     const results=await prisma.users.update({ data: 
         data.role
         ?

@@ -2,13 +2,17 @@ const userUtils=__require('utils/db/users')
 const {verify,hash}=__require('utils/hashPassword')
 const generateRandom=__require('utils/generateRandom')
 const joi=require('joi')
-
+const {existsSync,unlinkSync}=require('fs')
+const path=require('path')
 const index=async(req,res)=>{
     const id=parseInt(req.user_id);
     const data=await userUtils.getOne(id);
     if (data==null) return res.status(404).json({status:'error',
         message:"users not found"})
     data.password=null
+    if(existsSync(process.cwd()+'/img/user/'+data.photo)){
+        data._photo=__base_url('/img-user/'+data.photo)
+    }
     return res.status(200).json({status:'success',data})
 }
 
@@ -48,13 +52,13 @@ const updateData=async(req,res)=>{
         username:req.body.username,
         role:req.body.role,
         photo:req.files.img!==undefined?filename+".jpg":"man.jpg",
-    },id)
+    },{id})
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     if(req.files.photo!==undefined){
         if(oldData.photo!="man.jpg"){
-            __unlinkSync('img/user/'+oldData.photo+".jpg")
+            unlinkSync(path.join(process.cwd(),'/img/user',oldData.photo))
         }
-        await uploads(req.files.img, "./img/user/" + filename + ".jpg");
+        await uploads(req.files.photo, "./img/user/" + filename );
     }
     return res.status(200).json({status:'success',message:"data has been updated",data:result.id})
 }
@@ -95,7 +99,7 @@ const updatePassword=async(req,res)=>{
             message:"old password not match"})
     const result=await userUtils.update({
         password:await hash(req.body.new)
-    },id)
+    },{id})
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     return res.status(200).json({status:'success',message:"data has been updated",data:result.id})
 }

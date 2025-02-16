@@ -1,8 +1,10 @@
 const userUtils=__require('utils/db/users')
 const {verify,hash}=__require('utils/hashPassword')
 const generateRandom=__require('utils/generateRandom')
+const {unlinkSync, existsSync}=require('fs');
 const joi=require('joi')
-
+const uploads=__require('utils/uploads')
+const path=require('path')
 const index=async(req,res)=>{
     const data=await userUtils.getAll();
     return res.status(200).json({status:'success',data})
@@ -64,7 +66,7 @@ const create=async(req,res)=>{
     const result=await userUtils.add({
         username:req.body.username,
         password:await hash(req.body.password),
-        photo:req.files.img!==undefined?filename+".jpg":"man.jpg",
+        photo:req.files.photo!==undefined?filename+".jpg":"man.jpg",
         role:req.body.role
     })
     if(!result) return res.status(500).json({status:'error',message:"error when saving data"})
@@ -114,14 +116,16 @@ const updateData=async(req,res)=>{
     const result=await userUtils.update({
         username:req.body.username,
         role:req.body.role,
-        photo:req.files.img!==undefined?filename+".jpg":"man.jpg",
-    },id)
+        photo:req.files.photo!==undefined?filename+".jpg":oldData.photo,
+    },{id})
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     if(req.files.photo!==undefined){
         if(oldData.photo!="man.jpg"){
-            __unlinkSync('img/user/'+oldData.photo+".jpg")
+            if(existsSync(process.cwd()+'/img/user/'+oldData.photo)){
+                unlinkSync(path.join(process.cwd(),'/img/user',oldData.photo))
+            }
         }
-        await uploads(req.files.img, "./img/user/" + filename + ".jpg");
+        await uploads(req.files.photo, "./img/user/" + filename + ".jpg");
     }
     return res.status(200).json({status:'success',message:"data has been updated",data:result.id})
 }
@@ -153,7 +157,7 @@ const updatePassword=async(req,res)=>{
         message:"user not found"})
     const result=await userUtils.update({
         password:await hash(req.body.password)
-    },id)
+    },{id})
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     return res.status(200).json({status:'success',message:"data has been updated",data:result.id})
 }
@@ -163,9 +167,9 @@ const del=async(req,res)=>{
     const oldData=await userUtils.getOne(id);
     if (oldData==null) return res.status(404).json({status:'error',
         message:"user not found"})
-    const result=await userUtils.del(id)
+    const result=await userUtils.del({id})
     if(!result) return res.status(500).json({status:'error',message:"error when deleting data"})
-    if(oldData.photo!="man.jpg") __unlinkSync('img/user/'+oldData.photo+".jpg")
+    if(oldData.photo!="man.jpg") unlinkSync(path.join(process.cwd(),'/img/user',oldData.photo))
     return res.status(200).json({status:'success',message:"data has been deleted",data:result.id})
 }
 

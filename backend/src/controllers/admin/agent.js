@@ -63,7 +63,7 @@ const update=async(req,res)=>{
     const result=await agentUtils.update({
         name:req.body.name,
         context:req.body.context,
-    },id)
+    },{id})
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     return res.status(200).json({status:'success',message:"data has been updated",data:result.id})
 }
@@ -75,7 +75,7 @@ const enableBot=async(req,res)=>{
         message:"AI agent not found"})
     const result=await agentUtils.update({
         enable:true
-    },id)
+    },{id})
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     return res.status(200).json({status:'success',message:"bot has been enabled",data:result.id})
 }
@@ -87,7 +87,7 @@ const disableBot=async(req,res)=>{
         message:"AI agent not found"})
     const result=await agentUtils.update({
         enable:false
-    },id)
+    },{id})
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     return res.status(200).json({status:'success',message:"bot has been disabled",data:result.id})
 }
@@ -97,7 +97,7 @@ const del=async(req,res)=>{
     const oldData=await agentUtils.getOne(id);
     if (oldData==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
-    const result=await agentUtils.del(id)
+    const result=await agentUtils.del({id})
     if(!result) return res.status(500).json({status:'error',message:"error when deleting data"})
     return res.status(200).json({status:'success',message:"data has been deleted",data:result.id})
 }

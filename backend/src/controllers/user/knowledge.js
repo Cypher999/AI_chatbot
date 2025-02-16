@@ -72,7 +72,12 @@ const update=async(req,res)=>{
     const result=await knowledgeUtils.update({
         label:req.body.label,
         content:req.body.content
-    },id)
+    },{
+        agent:{
+            userid:req.user_id
+        },
+        id
+    })
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     return res.status(200).json({status:'success',message:"data has been updated",data:result.id})
 }
@@ -82,7 +87,12 @@ const del=async(req,res)=>{
     const oldData=await knowledgeUtils.getOne(id);
     if (oldData==null) return res.status(404).json({status:'error',
         message:"knowledge not found"})
-    const result=await knowledgeUtils.del(id)
+    const result=await knowledgeUtils.del({
+        agent:{
+            userid:req.user_id
+        },
+        id
+    })
     if(!result) return res.status(500).json({status:'error',message:"error when deleting data"})
     return res.status(200).json({status:'success',message:"data has been deleted",data:result.id})
 }

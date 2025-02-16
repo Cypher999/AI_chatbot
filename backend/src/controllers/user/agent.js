@@ -20,7 +20,7 @@ const index=async(req,res)=>{
 const getOne=async(req,res)=>{
     const id=parseInt(req.params.id);
     const data=await agentUtils.getOne(id);
-    if (data==null||data.userId!=req.user_id) return res.status(404).json({status:'error',
+    if (data==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
     return res.status(200).json({status:'success',data})
 }
@@ -55,7 +55,7 @@ const update=async(req,res)=>{
             message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     }
     const oldData=await agentUtils.getOne(id);
-    if (oldData==null||oldData.userId!=req.user_id) return res.status(404).json({status:'error',
+    if (oldData==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
     const checkName=await agentUtils.countName(req.body.name);
     if(checkName>0&&oldData.name!=req.body.name) return res.status(500).json({status:'error',
@@ -63,7 +63,7 @@ const update=async(req,res)=>{
     const result=await agentUtils.update({
         name:req.body.name,
         context:req.body.context,
-    },id)
+    },{userid:req.user_id,id})
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     return res.status(200).json({status:'success',message:"data has been updated",data:result.id})
 }
@@ -71,11 +71,11 @@ const update=async(req,res)=>{
 const enableBot=async(req,res)=>{
     const id=parseInt(req.params.id);
     const oldData=await agentUtils.getOne(id);
-    if (oldData==null||oldData.userId!=req.user_id) return res.status(404).json({status:'error',
+    if (oldData==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
     const result=await agentUtils.update({
         enable:true
-    },id)
+    },{userid:req.user_id,id})
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     return res.status(200).json({status:'success',message:"bot has been enabled",data:result.id})
 }
@@ -83,11 +83,11 @@ const enableBot=async(req,res)=>{
 const disableBot=async(req,res)=>{
     const id=parseInt(req.params.id);
     const oldData=await agentUtils.getOne(id);
-    if (oldData==null||oldData.userId!=req.user_id) return res.status(404).json({status:'error',
+    if (oldData==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
     const result=await agentUtils.update({
         enable:false
-    },id)
+    },{userid:req.user_id,id})
     if(!result) return res.status(500).json({status:'error',message:"error when updating data"})
     return res.status(200).json({status:'success',message:"bot has been disabled",data:result.id})
 }
@@ -95,9 +95,12 @@ const disableBot=async(req,res)=>{
 const del=async(req,res)=>{
     const id=parseInt(req.params.id);
     const oldData=await agentUtils.getOne(id);
-    if (oldData==null||oldData.userId!=req.user_id) return res.status(404).json({status:'error',
+    if (oldData==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
-    const result=await agentUtils.del(id)
+    const result=await agentUtils.del({
+        userid:req.user_id,
+        id
+    })
     if(!result) return res.status(500).json({status:'error',message:"error when deleting data"})
     return res.status(200).json({status:'success',message:"data has been deleted",data:result.id})
 }
