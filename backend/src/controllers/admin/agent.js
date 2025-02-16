@@ -13,13 +13,13 @@ const validator = joi.object({
         })
 });
 const index=async(req,res)=>{
-    const data=await agentUtils.getAll();
+    const data=await agentUtils.getMany();
     return res.status(200).json({status:'success',data})
 }
 
 const getOne=async(req,res)=>{
     const id=parseInt(req.params.id);
-    const data=await agentUtils.getOne(id);
+    const data=await agentUtils.getOne({id});
     if (data==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
     return res.status(200).json({status:'success',data})
@@ -33,7 +33,7 @@ const create=async(req,res)=>{
             status:'error',
             message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     }
-    const checkName=await agentUtils.countName(req.body.name);
+    const checkName=await agentUtils.count({name:req.body.name});
     if(checkName>0) return res.status(500).json({status:'error',message:"name already used"})
     const result=await agentUtils.add({
         userId:req.user_id,
@@ -54,10 +54,10 @@ const update=async(req,res)=>{
             status:'error',
             message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     }
-    const oldData=await agentUtils.getOne(id);
+    const oldData=await agentUtils.getOne({id});
     if (oldData==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
-    const checkName=await agentUtils.countName(req.body.name);
+    const checkName=await agentUtils.count({name:req.body.name});
     if(checkName>0&&oldData.name!=req.body.name) return res.status(500).json({status:'error',
         message:"name already used"})
     const result=await agentUtils.update({
@@ -70,7 +70,7 @@ const update=async(req,res)=>{
 
 const enableBot=async(req,res)=>{
     const id=parseInt(req.params.id);
-    const oldData=await agentUtils.getOne(id);
+    const oldData=await agentUtils.getOne({id});
     if (oldData==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
     const result=await agentUtils.update({
@@ -82,7 +82,7 @@ const enableBot=async(req,res)=>{
 
 const disableBot=async(req,res)=>{
     const id=parseInt(req.params.id);
-    const oldData=await agentUtils.getOne(id);
+    const oldData=await agentUtils.getOne({id});
     if (oldData==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
     const result=await agentUtils.update({
@@ -94,7 +94,7 @@ const disableBot=async(req,res)=>{
 
 const del=async(req,res)=>{
     const id=parseInt(req.params.id);
-    const oldData=await agentUtils.getOne(id);
+    const oldData=await agentUtils.getOne({id});
     if (oldData==null) return res.status(404).json({status:'error',
         message:"AI agent not found"})
     const result=await agentUtils.del({id})

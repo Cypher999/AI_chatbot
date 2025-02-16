@@ -22,10 +22,9 @@ const login=async (req,res)=>{
             status:'error',
             message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     }
-    const count=await users.checkUsername(req.body.username);
-    console.log(count)
+    const count=await users.count({username:req.body.username});
     if(count<=0) return res.status(500).json({status:'error','message':'username not found'}); 
-    const data = await users.getUsername(req.body.username);
+    const data = await users.getOne({username:req.body.username});
     if (data) {
         const checkPassword=await verify(req.body.password,data.password);
         if(!checkPassword) return res.status(500).json({status:'error','message':'password doesnt match'});
@@ -42,7 +41,7 @@ const login=async (req,res)=>{
 const checkUser=async (req,res)=>{
     if(req.user_id=="") return res.status(200).json({status:'success',data:{role:'public'}})  
     const id=parseInt(req.user_id)
-    const data = await users.getOne(id);
+    const data = await users.getOne({id});
     if (data) {
         data.password=null;
         return res.status(200).json({status:'success',data})      

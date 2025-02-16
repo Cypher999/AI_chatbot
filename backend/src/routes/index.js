@@ -138,10 +138,10 @@ class PublicRouter{
 const route=exp.Router();
 const admin_router=new AdminRouter();
 const public_router=new PublicRouter();
-// const user_router=new UserRouter();
+const user_router=new UserRouter();
 
 route.use("/admin",admin_router.router);
-// route.use("/user",user_router.router);
+route.use("/user",user_router.router);
 route.use("/",public_router.router);
 
 route.all("*",(req,res)=>{

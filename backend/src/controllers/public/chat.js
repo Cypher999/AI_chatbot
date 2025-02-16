@@ -12,10 +12,10 @@ const index=async (req,res)=>{
       });
     const { error } = validator.validate(req.body,{ abortEarly: false });
     const agentId=parseInt(req.params.agentId);;
-    const agentData=await agent.getOne(agentId)
+    const agentData=await agent.getOne({id:agentId})
     if(!agentData) return res.status(500).json({status:'error','message':'bot id not found'});
     if(!agentData.enable) return res.status(500).json({status:'error','message':'bot is disabled by admin'});
-    let knowledgeData=await knowledge.getAgentId(agentId)    
+    let knowledgeData=await knowledge.getMany({agentId})    
     knowledgeData=JSON.stringify(knowledgeData.map(n=>({label:n.label,content:n.content})))
     if (error) {
         return res.status(500).json({code:500, status:'error',message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
@@ -58,16 +58,23 @@ const index=async (req,res)=>{
             'Authorization': `Bearer ${process.env.HUGGINGFACE_TOKEN}`
         }
     });
-    const data = response.data;
-    if (data) {
-      return res.status(200).json({
-        status:'success',
-        data:data[0].generated_text.replace(/\n+/g, " ")
-      })
-      
-    } else {
-      return res.status(500).json({status:'error','message':''});
+    console.log(response.status);
+      if(response.status==200){
+        const data = response.data;
+      if (data) {
+        return res.status(200).json({
+          status:'success',
+          data:data[0].generated_text.replace(/\n+/g, " ")
+        })
+        
+      } else {
+        return res.status(500).json({status:'error','message':''});
+      }
     }
+    else{
+      return res.status(500).json({status:'error','message':'there is problem with AI model, please stand by'});
+    }
+    
 }
 
 module.exports={index};

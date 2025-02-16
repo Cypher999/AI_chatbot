@@ -6,7 +6,7 @@ const {existsSync,unlinkSync}=require('fs')
 const path=require('path')
 const index=async(req,res)=>{
     const id=parseInt(req.user_id);
-    const data=await userUtils.getOne(id);
+    const data=await userUtils.getOne({id});
     if (data==null) return res.status(404).json({status:'error',
         message:"users not found"})
     data.password=null
@@ -31,10 +31,10 @@ const updateData=async(req,res)=>{
             status:'error',
             message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     
-    const oldData=await userUtils.getOne(id);
+    const oldData=await userUtils.getOne({id});
     if (oldData==null) return res.status(404).json({status:'error',
         message:"user not found"})
-    const checkName=await userUtils.checkUsername(req.body.username);
+    const checkName=await userUtils.count({username:req.body.username});
     if(checkName>0&&oldData.username!=req.body.username) return res.status(500).json({
         status:'error',
         message:"name already used"})
@@ -92,7 +92,7 @@ const updatePassword=async(req,res)=>{
             status:'error',
             message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     
-    const oldData=await userUtils.getOne(id);
+    const oldData=await userUtils.getOne({id});
     if (oldData==null) return res.status(404).json({status:'error',
         message:"user not found"})
     if (await verify(req.body.old,oldData.password)==false) return res.status(500).json({status:'error',

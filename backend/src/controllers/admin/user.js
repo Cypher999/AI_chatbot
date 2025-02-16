@@ -6,13 +6,13 @@ const joi=require('joi')
 const uploads=__require('utils/uploads')
 const path=require('path')
 const index=async(req,res)=>{
-    const data=await userUtils.getAll();
+    const data=await userUtils.getMany();
     return res.status(200).json({status:'success',data})
 }
 
 const getOne=async(req,res)=>{
     const id=parseInt(req.params.id);
-    const data=await userUtils.getOne(id);
+    const data=await userUtils.getOne({id});
     if (data==null) return res.status(404).json({status:'error',
         message:"users not found"})
     return res.status(200).json({status:'success',data})
@@ -52,7 +52,7 @@ const create=async(req,res)=>{
             status:'error',
             message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     if(["admin","user"].indexOf(req.body.role)<=-1) return res.status(500).json({status:'error',message:"role must be user or admin"})
-    const checkName=await userUtils.checkUsername(req.body.username)
+    const checkName=await userUtils.count({username:req.body.username})
     if(checkName>0) return res.status(500).json({status:'error',message:"name already used"})
     if(req.files.photo!==undefined){
         if(req.files.photo.size/1000>5200){
@@ -96,10 +96,10 @@ const updateData=async(req,res)=>{
             status:'error',
             message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     
-    const oldData=await userUtils.getOne(id);
+    const oldData=await userUtils.getOne({id});
     if (oldData==null) return res.status(404).json({status:'error',
         message:"user not found"})
-    const checkName=await userUtils.checkUsername(req.body.username);
+    const checkName=await userUtils.count({username:req.body.username});
     if(checkName>0&&oldData.username!=req.body.username) return res.status(500).json({status:'error',
         message:"name already used"})
     if(req.files.photo!==undefined){
@@ -110,6 +110,7 @@ const updateData=async(req,res)=>{
             return res.status(500).json({ code:500,status:"error",message: 'file must be an image' });
         }
     }
+    console.log(req.files)
     if(["admin","user"].indexOf(req.body.role)<=-1) return res.status(500).json({status:'error',message:"role must be user or admin"})
     const filename=generateRandom(10);
     
@@ -152,7 +153,7 @@ const updatePassword=async(req,res)=>{
             status:'error',
             message: error.details.map(detail => {return {[detail.path]:detail.message}}) });
     
-    const oldData=await userUtils.getOne(id);
+    const oldData=await userUtils.getOne({id});
     if (oldData==null) return res.status(404).json({status:'error',
         message:"user not found"})
     const result=await userUtils.update({
@@ -164,7 +165,7 @@ const updatePassword=async(req,res)=>{
 
 const del=async(req,res)=>{
     const id=parseInt(req.params.id);
-    const oldData=await userUtils.getOne(id);
+    const oldData=await userUtils.getOne({id});
     if (oldData==null) return res.status(404).json({status:'error',
         message:"user not found"})
     const result=await userUtils.del({id})

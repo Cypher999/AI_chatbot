@@ -2,16 +2,16 @@ const prisma=__require('utils/prismaClient')
 
 const getMany=async (where=null)=>{
     let data=null
-    if(where!=null){
+    if(where==null){
         data=await prisma.knowledge.findMany()
     }
     else{
-        await prisma.knowledge.findMany({where})
+        data=await prisma.knowledge.findMany({where})
     }
     return data;
 }
 
-const getOne=async (id)=>{
+const getOne=async (where)=>{
     let data=await prisma.knowledge.findFirst({
         where 
     })
@@ -20,13 +20,7 @@ const getOne=async (id)=>{
 const count=async (where=null)=>{
     let data=null;
     if(where==null){
-        data=await prisma.knowledge.count({
-            where:{
-                agent:{
-                    userId
-                }
-            }
-        })
+        data=await prisma.knowledge.count()
     }
     else{
         data=await prisma.knowledge.count({

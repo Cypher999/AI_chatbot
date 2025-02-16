@@ -33,12 +33,12 @@ const count=async (where=null)=>{
         data=await prisma.agent.count()
     }
     else{
-        data=await prisma.agent.count([where])
+        data=await prisma.agent.count({where})
     }
     return data;
 }
 
-const getOne=async (where)=>{
+const getOne=async(where)=>{
     let data=await prisma.agent.findFirst({
         where
     })

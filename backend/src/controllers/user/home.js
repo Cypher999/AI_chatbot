@@ -4,9 +4,12 @@ const knowledgeUtils=__require('utils/db/knowledge')
 
 const index=async(req,res)=>{
     const data={
-        agent:await agentUtils.countAll(),
-        users:await userUtils.countAll(),
-        knowledge:await knowledgeUtils.countAll()
+        agent:await agentUtils.count({userId:req.user_id}),
+        knowledge:await knowledgeUtils.count({
+            agent:{
+                userId:req.user_id
+            }
+        })
     }
     return res.status(200).json({status:'success',data});
 }

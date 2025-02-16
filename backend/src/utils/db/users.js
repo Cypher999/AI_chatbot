@@ -2,8 +2,14 @@ const prisma=__require('utils/prismaClient')
 const {UserType}=require('@prisma/client')
 const {existsSync}=require('fs')
 const path=require('path');
-const getAll=async ()=>{
-    let data=await prisma.users.findMany();
+const getMany=async (where=null)=>{
+    let data=null
+    if(where==null){
+        data=await prisma.users.findMany();
+    }
+    else{
+        data=await prisma.users.findMany({where});
+    }
     data.forEach((item,index)=>{
             if(existsSync(path.join(process.cwd(),'/img/user/',item.photo))){
                 data[index]._photo=__base_url('/img-user/'+item.photo)
@@ -12,9 +18,9 @@ const getAll=async ()=>{
     return data;
 }
 
-const getOne=async (id)=>{
+const getOne=async (where)=>{
     let data=await prisma.users.findFirst({
-        where : { id }
+        where 
     })
     data._photo='/img_user/man.jpg';
     if(data.photo!=null){
@@ -27,24 +33,17 @@ const getOne=async (id)=>{
     return data;
 }
 
-const getUsername=async (username)=>{
-    let data=await prisma.users.findFirst({
-        where : { username }
-    })
-    data._photo='/img_user/man.jpg';
-    if(data.photo!=null){
-        const filePath = path.join(process.cwd(), 'img/user', data.photo);
-        if(existsSync(filePath)){
-            data._photo=__base_url('/img_user/'+data.photo)
-        }
-    }
-    return data;
-}
 
-const checkUsername=async (username)=>{
-    let data=await prisma.users.count({
-        where : { username }
-    })
+const count=async (where=null)=>{
+    let data=null
+    if(where==null){
+        data=await prisma.users.count()
+    }
+    else{
+        data=await prisma.users.count({
+            where 
+        })
+    }
     return data;
 }
 
@@ -57,7 +56,7 @@ const add=async (data)=>{
      return newUser;
  }
 
- const update=async (data,{id})=>{
+ const update=async (data,where)=>{
     const results=await prisma.users.update({ data: 
         data.role
         ?
@@ -70,18 +69,14 @@ const add=async (data)=>{
             ...data
         }
         ,
-       where:{id} 
+       where
      });
      return results;
  }
- const del=async (id)=>{
+ const del=async (where)=>{
     const results=await prisma.users.delete({
-       where:{id} 
+       where
      });
      return results;
  }
- const countAll=async ()=>{
-    let data=await prisma.users.count()
-    return data;
-}
-module.exports={getAll,getOne,add,update,del,getUsername,checkUsername,countAll}
+module.exports={getMany,count,getOne,add,update,del}

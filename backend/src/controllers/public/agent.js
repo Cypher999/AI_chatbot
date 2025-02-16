@@ -1,6 +1,6 @@
 const agent=__require('utils/db/agent')
 const index=async (req,res)=>{
-    const data = await agent.getAll();
+    const data = await agent.getMany();
     if (data) {
       return res.status(200).json({status:'success',data})
       
