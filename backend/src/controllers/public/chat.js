@@ -58,7 +58,6 @@ const index=async (req,res)=>{
             'Authorization': `Bearer ${process.env.HUGGINGFACE_TOKEN}`
         }
     });
-    console.log(response.status);
       if(response.status==200){
         const data = response.data;
       if (data) {

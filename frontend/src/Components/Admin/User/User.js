@@ -6,23 +6,28 @@ import axios from "axios";
 import ModalAdd from "./ModalAdd";
 import TableRow from "./TableRow";
 import ModalEdit from "./ModalEdit";
+import ModalEditPassword from "./ModalEditPassword";
 export default ()=> {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
-  const [prevPhotoAdd,setPrevPhotoAdd]=useState("");
-  const [prevPhotoEdit,setPrevPhotoEdit]=useState("");
+  const [prevPhotoAdd, setPrevPhotoAdd] = useState(null);
+  const [prevPhotoEdit, setPrevPhotoEdit] = useState(null);
+  const [showModalEditPassword, setShowModalEditPassword] = useState(false);
   const [modalAddData,setModalAddData]=useState({
     username:"",
     password:"",
+    confirm:"",
     photo:null,
-    role:""
   })
   const [modalEditData,setModalEditData]=useState({
     id:0,
     username:"",
-    password:"",
     photo:null,
-    role:""
+  })
+  const [modalEditPassword,setModalEditPassword]=useState({
+    id:0,
+    password:"",
+    confirm:""
   })
   const [data, setData] = useState([]);
 
@@ -36,9 +41,7 @@ export default ()=> {
       }
     })
     req=req.data;
-    if(req.status=='success') {
-      setData(req.data)
-    }
+    if(req.status=='success') setData(req.data)
     setLoading(false)
   }
   const readOne=async(id)=>{
@@ -50,13 +53,17 @@ export default ()=> {
     })
     req=req.data;
     if(req.status=='success') {
-        setModalEditData(req.data)
+        setModalEditData(n=>({
+          ...req.data,
+          ['photo']:null
+        }))
+        setPrevPhotoEdit(req.data._photo)
         setShowModalEdit(true)
     }
   }
   const del=async(id)=>{
     let token=Cookies.get('auth-token')
-    let req=await axios.delete(process.env.NEXT_PUBLIC_API_URL+'admin/agent/'+id,{
+    let req=await axios.delete(process.env.NEXT_PUBLIC_API_URL+'admin/user/'+id,{
       headers:{
         authorization:"bearer "+token
       }
@@ -69,7 +76,7 @@ export default ()=> {
   },[])
   return (
     <Container className="mt-5">
-      <h1 className="mb-4">Agent</h1>
+      <h1 className="mb-4">Users</h1>
 
       {/* Button to Open Modal */}
       <Button variant="primary" onClick={()=>{setShowModalAdd(true)}}>
@@ -89,13 +96,24 @@ export default ()=> {
             <thead>
             <tr>
                 <th>Name</th>
-                <th>Context</th>
                 <th>Control</th>
             </tr>
             </thead>
             <tbody>
             {data.map((item,index) => (
-                <TableRow key={index} item={item} readOne={readOne} del={del}/>
+                <TableRow 
+                key={index} 
+                item={item}
+                editPasswordHandler={()=>{
+                  setShowModalEditPassword(true);
+                  setModalEditPassword(n=>({
+                    ...n,
+                    ['id']:item.id
+                  }))
+                }}
+                
+                readOne={readOne} 
+                del={del}/>
             ))}
             </tbody>
         </Table>
@@ -106,13 +124,17 @@ export default ()=> {
       <ModalAdd
         showModal={showModalAdd}
         setShowModal={setShowModalAdd}
+        prevPhoto={prevPhotoAdd}
+        setPrevPhoto={setPrevPhotoAdd}
         modalData={modalAddData}
         setModalData={setModalAddData}
         onSubmit={async()=>{
             setModalAddData({
                 password:"",
-                username:""
+                username:"",
+                photo:null,
             })
+            setPrevPhotoAdd(null)
             setShowModalAdd(false)
             await readData()
 
@@ -123,13 +145,32 @@ export default ()=> {
         setShowModal={setShowModalEdit}
         modalData={modalEditData}
         setModalData={setModalEditData}
+        prevPhoto={prevPhotoEdit}
+        setPrevPhoto={setPrevPhotoEdit}
         onSubmit={async()=>{
             setModalEditData({
                 id:0,
-                password:"",
-                username:""
+                username:"",
+                photo:null,
             })
             setShowModalEdit(false)
+            setPrevPhotoEdit(null)
+            await readData()
+
+        }}
+      />
+      <ModalEditPassword
+        showModal={showModalEditPassword}
+        setShowModal={setShowModalEditPassword}
+        modalData={modalEditPassword}
+        setModalData={setModalEditPassword}
+        onSubmit={async()=>{
+            setModalEditPassword({
+                id:0,
+                password:"",
+                confirm:"",
+            })
+            setShowModalEditPassword(false)
             await readData()
 
         }}

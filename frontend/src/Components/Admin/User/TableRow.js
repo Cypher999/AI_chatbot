@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import { Button,Spinner } from "react-bootstrap"
-export default ({item,readOne,del})=>{
+export default ({item,readOne,del,editPasswordHandler})=>{
     const [loading,setLoading]=useState(false);
     const deleteHandler=async()=>{   
         const confirmDelete=confirm('delete data ?')
@@ -18,8 +18,7 @@ export default ({item,readOne,del})=>{
     }
     return (
         <tr>
-            <td>{item.name}</td>
-            <td>{item.context}</td>
+            <td>{item.username}</td>
             <td>
             {
                 loading
@@ -32,18 +31,18 @@ export default ({item,readOne,del})=>{
                     <Button className="m-2"
                         onClick={editHandler}
                     variant="warning">
-                        Edit
+                        Edit Data
+                    </Button>
+                    <Button className="m-2"
+                        onClick={editPasswordHandler}
+                    variant="warning">
+                        Edit Password
                     </Button>
                     <Button
                     onClick={deleteHandler}
                     className="m-2" variant="danger">
                         Delete
                     </Button>
-                    <a href={"/admin/knowledge/"+item.id}>
-                        <Button className="m-2" variant="success">
-                            Knowledge
-                        </Button>
-                    </a>
                 </>
             }                
             </td>

@@ -49,17 +49,13 @@ export default ({children}) => {
             className={`bg-light vh-100 p-3 ${showMenu ? "d-block" : "d-none d-md-block"}`}
           >
             <Nav className="flex-column">
-              <Nav.Link href="/admin" className="border border-1 rounded-3 mb-2">
+              <Nav.Link href="/user" className="border border-1 rounded-3 mb-2">
                 <FontAwesomeIcon icon={faHome}/>
                 <span className="ms-3">Home</span>
               </Nav.Link>
-              <Nav.Link href="/admin/agent" className="border border-1 rounded-3 mb-2">
+              <Nav.Link href="/user/agent" className="border border-1 rounded-3 mb-2">
                 <FontAwesomeIcon icon={faRobot}/>
                 <span className="ms-3">Agent</span>
-              </Nav.Link>
-              <Nav.Link href="/admin/user" className="border border-1 rounded-3 mb-2">
-                <FontAwesomeIcon icon={faUser}/>
-                <span className="ms-3">Users</span>
               </Nav.Link>
             </Nav>
           </Col>

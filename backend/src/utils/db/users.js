@@ -22,12 +22,12 @@ const getOne=async (where)=>{
     let data=await prisma.users.findFirst({
         where 
     })
-    data._photo='/img_user/man.jpg';
+    data._photo='/img-user/man.jpg';
     if(data.photo!=null){
         const filePath = path.join(process.cwd(), 'img/user', data.photo);
         if(existsSync(filePath)){
             
-            data._photo=__base_url('/img_user/'+data.photo)
+            data._photo=__base_url('/img-user/'+data.photo)
         }
     }
     return data;

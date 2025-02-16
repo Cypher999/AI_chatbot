@@ -106,7 +106,7 @@ export default () => {
                                     :
                                     <div className="mb-2">
                                         <div className="bg-light p-2 rounded" style={{ maxWidth: "75%" }}>
-                                            <ReactMarkdown>{item.content}</ReactMarkdown>
+                                        {item.content}
                                         </div>
                                     </div>
                                 }

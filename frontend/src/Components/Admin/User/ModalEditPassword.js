@@ -21,18 +21,18 @@ export default ({
     const sendData=async(e)=>{
         setLoading(true);
         const fr=new FormData();
-        fr.append('name',modalData.name)
-        fr.append('context',modalData.context)
+        fr.append('password',modalData.password)
+        fr.append('confirm',modalData.confirm)
         let token=Cookies.get('auth-token')
         try {
-            let req=await axios.put(process.env.NEXT_PUBLIC_API_URL+'admin/agent/'+modalData.id,fr,{
+            let req=await axios.put(process.env.NEXT_PUBLIC_API_URL+'admin/user/update-password/'+modalData.id,fr,{
                 headers:{
                   'content-type':'multipart/form-data',
                   authorization:"bearer "+token
                 }
               })
               req=req.data;
-              alert('agent has been updated')
+              alert('password has been updated')
               await onSubmit()
           } catch (error) {
             setError(error.response.data.message)
@@ -47,34 +47,33 @@ export default ({
     return (
         <Modal show={showModal} onHide={()=>{setShowModal(false)}}>
             <Modal.Header closeButton>
-            <Modal.Title>Update Data</Modal.Title>
+            <Modal.Title>Update Password</Modal.Title>
             </Modal.Header>
             <Modal.Body>
             <Form>
                 <Form.Group className="mb-3">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                    type="text"
-                    name="name"
-                    value={modalData.name}
-                    onChange={formHandle}
-                    required
-                />
-                {typeof(error)=="object"
-                     && <div className="text-danger">{error[0].name}</div>}
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                        type="password"
+                        name="password"
+                        value={modalData.password}
+                        onChange={formHandle}
+                        required
+                    />
+                    {typeof(error)=="object"
+                        && <div className="text-danger">{error[0].password}</div>}
                 </Form.Group>
                 <Form.Group className="mb-3">
-                <Form.Label>Context</Form.Label>
-                <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="context"
-                    value={modalData.context}
-                    onChange={formHandle}
-                    required
-                />
-                {typeof(error)=="object"
-                     && <div className="text-danger">{error[0].context}</div>}
+                    <Form.Label>Confirm</Form.Label>
+                    <Form.Control
+                        type="password"
+                        name="confirm"
+                        value={modalData.confirm}
+                        onChange={formHandle}
+                        required
+                    />
+                    {typeof(error)=="object"
+                        && <div className="text-danger">{error[0].confirm}</div>}
                 </Form.Group>
             </Form>
             </Modal.Body>

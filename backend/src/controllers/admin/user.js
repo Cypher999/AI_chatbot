@@ -6,7 +6,9 @@ const joi=require('joi')
 const uploads=__require('utils/uploads')
 const path=require('path')
 const index=async(req,res)=>{
-    const data=await userUtils.getMany();
+    const data=await userUtils.getMany({
+        id:{not:req.user_id}
+    });
     return res.status(200).json({status:'success',data})
 }
 

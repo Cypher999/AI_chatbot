@@ -8,31 +8,45 @@ export default ({
     setShowModal,
     modalData,
     setModalData,
+    prevPhoto,
+    setPrevPhoto,
     onSubmit
 })=>{
     const formHandle=(e)=>{
-        setModalData(n=>({
-            ...n,
-            [e.target.name]:e.target.value
-        }))
+        console.log(e.target)
+        if(e.target.getAttribute('type')=='file'){
+            setModalData(n=>({
+                ...n,
+                [e.target.name]:e.target.files[0]
+            }))
+        }
+        else{
+            setModalData(n=>({
+                ...n,
+                [e.target.name]:e.target.value
+            }))
+        }
     }
     const [loading,setLoading]=useState(false)
     const [error,setError]=useState("")
     const sendData=async(e)=>{
         setLoading(true);
         const fr=new FormData();
-        fr.append('name',modalData.name)
-        fr.append('context',modalData.context)
+        fr.append('username',modalData.username)
+        if(modalData.photo1=null){
+            fr.append('photo',modalData.photo)
+        }
+        
         let token=Cookies.get('auth-token')
         try {
-            let req=await axios.post(process.env.NEXT_PUBLIC_API_URL+'admin/agent',fr,{
+            let req=await axios.put(process.env.NEXT_PUBLIC_API_URL+'user/personal/update-data',fr,{
                 headers:{
                   'content-type':'multipart/form-data',
                   authorization:"bearer "+token
                 }
               })
               req=req.data;
-              alert('agent has been saved')
+              alert('user has been updated')
               await onSubmit()
           } catch (error) {
             setError(error.response.data.message)
@@ -47,34 +61,35 @@ export default ({
     return (
         <Modal show={showModal} onHide={()=>{setShowModal(false)}}>
             <Modal.Header closeButton>
-            <Modal.Title>Insert Data</Modal.Title>
+            <Modal.Title>Update Data</Modal.Title>
             </Modal.Header>
             <Modal.Body>
             <Form>
-                <Form.Group className="mb-3">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                    type="text"
-                    name="name"
-                    value={modalData.name}
-                    onChange={formHandle}
-                    required
-                />
-                {typeof(error)=="object"
-                     && <div className="text-danger">{error[0].name}</div>}
+            <Form.Group className="mb-3">
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="username"
+                        value={modalData.username}
+                        onChange={formHandle}
+                        required
+                    />
+                    {typeof(error)=="object"
+                        && <div className="text-danger">{error[0].username}</div>}
                 </Form.Group>
                 <Form.Group className="mb-3">
-                <Form.Label>Context</Form.Label>
-                <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="context"
-                    value={modalData.context}
-                    onChange={formHandle}
-                    required
-                />
-                {typeof(error)=="object"
-                     && <div className="text-danger">{error[0].context}</div>}
+                    <Form.Label>Photo</Form.Label>
+                    <div>
+                        <input type="file" name="photo" onChange={(e)=>{
+                            formHandle(e)
+                            setPrevPhoto(URL.createObjectURL(e.target.files[0]))
+                        }}/>
+                    </div>
+                    <div>
+                        <img src={prevPhoto} style={{width:200,height:200}}/>
+                    </div>
+                    {typeof(error)=="object"
+                        && <div className="text-danger">{error[0].confirm}</div>}
                 </Form.Group>
             </Form>
             </Modal.Body>

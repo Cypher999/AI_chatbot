@@ -7,14 +7,13 @@ import Cookies from "js-cookie";
 const App = () => {
   const [data,setData]=useState({
     agent:0,
-    users:0,
     knowledge:0
   })
   const [loading,setLoading]=useState(true)
   const readData=async()=>{
     setLoading(true);
     let token=Cookies.get('auth-token')
-    let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'admin/home',{
+    let req=await axios.get(process.env.NEXT_PUBLIC_API_URL+'user/home',{
       headers:{
         authorization:"bearer "+token
       }
@@ -48,7 +47,7 @@ const App = () => {
                 <h2>{data.agent}</h2>
 
                 {/* Button */}
-                <a href="/admin/agent">
+                <a href="/user/agent">
                   <Button variant="primary">Read All Data</Button>
                 </a>
               </Card.Body>
@@ -69,26 +68,7 @@ const App = () => {
                 
               </Card.Body>
             </Card>
-          </Col>
-          <Col xs={11} md={5} lg={3}>
-            <Card>
-              <Card.Header>
-                Users
-              </Card.Header>
-              {/* Card Body */}
-              <Card.Body>
-
-                {/* Card Text */}
-                <h2>{data.users}</h2>
-
-                {/* Button */}
-                <a href="/admin/users">
-                  <Button variant="primary">Read All Data</Button>
-                </a>
-              </Card.Body>
-            </Card>
-          </Col>
-          
+          </Col>          
         </Row>
       }
     </>
