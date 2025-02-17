@@ -8,7 +8,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight,faArrowDown } from "@fortawesome/free-solid-svg-icons";
-import ReactMarkdown from 'react-markdown'
 export default () => {
     const [agent,setAgent]=useState({
         id:'1',

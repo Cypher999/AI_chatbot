@@ -11,5 +11,4 @@ app.use(formParse);
 app.set('trust proxy', true);
 app.use("/img-user", exp.static(path.join(process.cwd(), "img/user")));
 app.use('/',routes)
-
 module.exports=app;
