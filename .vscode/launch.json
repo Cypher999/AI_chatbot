@@ -3,15 +3,8 @@
   "configurations": [
     {
       "request": "launch",
-      "name": "Backend",
-      "cwd": "${workspaceFolder}/backend",
-      "command": "npm run dev",
-      "type": "node-terminal",
-    },
-    {
-      "request": "launch",
       "name": "Frontend",
-      "cwd": "${workspaceFolder}/frontend",
+      "cwd": "${workspaceFolder}",
       "command": "npm run dev",
       "type": "node-terminal",
     }
@@ -20,7 +13,6 @@
     {
       "name": "All",
       "configurations": [
-        "Backend",
         "Frontend"
       ],
       "stopAll": true
