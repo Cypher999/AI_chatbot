@@ -9,7 +9,5 @@ export async function GET(req) {
     cookieName: "ai-chatbot-token", // Set your custom cookie name here
   });
 
-  console.log("API Token:", token);
-
   return NextResponse.json({ token });
 }

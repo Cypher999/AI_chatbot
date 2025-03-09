@@ -3,6 +3,10 @@ export const getAll=function (params=null){
     return prisma.knowledge.findMany(params);
 }
 
+export const count=function (params=null){
+    return prisma.knowledge.count(params);
+}
+
 export const getOne=function (params=null){
     return prisma.knowledge.findFirst(params);
 }
