@@ -4,6 +4,10 @@ export const getAll=function (params=null){
     return prisma.users.findMany(params);
 }
 
+export const count=function (params=null){
+    return prisma.users.count(params);
+}
+
 export const getOne=function (params=null){
     return prisma.users.findFirst(params);
 }

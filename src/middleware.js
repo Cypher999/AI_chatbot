@@ -8,8 +8,6 @@ export async function middleware(req) {
         raw: true, // Allows parsing from raw cookies
         cookieName: "ai-chatbot-token", // Set your custom cookie name here
       });
-    
-      console.log("API Token:", token);
   if (!token) {
     if (req.nextUrl.pathname.startsWith("/admin")||req.nextUrl.pathname.startsWith("/user")) {
         return NextResponse.redirect(new URL("/login?token="+token, req.url));

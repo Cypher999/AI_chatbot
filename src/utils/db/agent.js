@@ -3,6 +3,10 @@ export const getAll=function (params=null){
     return prisma.agent.findMany(params);
 }
 
+export const count=function (params=null){
+    return prisma.agent.count(params);
+}
+
 export const getOne=function (params=null){
     return prisma.agent.findFirst(params);
 }
