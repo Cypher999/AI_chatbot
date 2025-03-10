@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import axios from "axios"
-import TextInput from "./shared/textInput";
+import Input from "./ui/input";
 import PasswordInput from "./shared/passwordInput";
 import { User } from "lucide-react";
 export default function Signup() {
@@ -40,7 +40,7 @@ export default function Signup() {
             <h1 className="text-2xl font-bold text-center">Signup</h1>
             {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
             <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-                <TextInput
+                <Input
                     icon={<User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />}
                     name="name"
                     placeholder="enter username"

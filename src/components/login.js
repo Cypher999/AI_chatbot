@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react";
 import { User } from "lucide-react"
-import TextInput from "./shared/textInput";
+import Input from "./ui/input";
 import PasswordInput from "./shared/passwordInput";
 export default function Login() {
   const [form, setForm] = useState({ name: "",password: ""})
@@ -39,7 +39,7 @@ export default function Login() {
             {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
             <form onSubmit={handleSubmit} className="mt-4 space-y-4">
                 {/* Username Input */}
-                <TextInput
+                <Input
                     icon={<User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />}
                     name="name"
                     placeholder="enter username"
