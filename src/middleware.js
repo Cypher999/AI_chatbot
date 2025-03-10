@@ -12,11 +12,16 @@ export async function middleware(req) {
     if (req.nextUrl.pathname.startsWith("/admin")||req.nextUrl.pathname.startsWith("/user")) {
         return NextResponse.redirect(new URL("/login?token="+token, req.url));
     }
+    if (req.nextUrl.pathname.startsWith("/api/admin")||req.nextUrl.pathname.startsWith("/api/user")) {
+      return NextResponse.json({error:'not found'}, { status: 404 });
   }
-  if ((req.nextUrl.pathname.startsWith("/admin")||req.nextUrl.pathname.startsWith("/api/admin")) && token.role === "user") {
+  }
+  if (req.nextUrl.pathname.startsWith("/admin") && token.role === "user") {
     return NextResponse.redirect(new URL("/user", req.url));
   }
-  
+  if (req.nextUrl.pathname.startsWith("/api/admin") && token.role === "user") {
+    return NextResponse.json({error:'not found'}, { status: 404 });
+  }
   return NextResponse.next(); 
 }
 

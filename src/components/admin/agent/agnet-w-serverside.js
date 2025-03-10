@@ -10,15 +10,18 @@ import {
 } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import Input from "@/components/ui/input";
+import { getAll } from "@/utils/services/admin/agent";
 
-// Sample API endpoint (replace with your actual API)
-const API_URL = "https://api.example.com/users"; // Adjust this URL to your API
-
+const columns = [
+  { accessorKey: "id", header: "ID" },
+  { accessorKey: "name", header: "agent name" },
+  { accessorKey: "description", header: "description" },
+];
 export default function Agent() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
   const [data, setData] = useState([]);
-  const [totalCount, setTotalCount] = useState(0); // To store total number of records
+  const [totalCount, setTotalCount] = useState(0); 
 
   const table = useReactTable({
     data,
@@ -30,23 +33,17 @@ export default function Agent() {
     getFilteredRowModel: getFilteredRowModel(),
     onGlobalFilterChange: setGlobalFilter,
   });
-
-  // Fetch data from the server whenever pagination or global filter changes
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${API_URL}?page=${pagination.pageIndex + 1}&size=${pagination.pageSize}&filter=${globalFilter}`);
-      const result = await response.json();
-      setData(result.data); // Adjust based on your API response structure
-      setTotalCount(result.totalCount); // Adjust based on your API response structure
+      const response = await getAll(pagination.pageIndex,pagination.pageSize,globalFilter);
+      setData(result.data); 
+      setTotalCount(result.totalCount); 
     };
-
     fetchData();
   }, [pagination, globalFilter]);
 
   const totalPages = Math.ceil(totalCount / pagination.pageSize);
-  const currentPage = pagination.pageIndex + 1; // Convert to 1-based index
-
-  // Calculate min and max page numbers
+  const currentPage = pagination.pageIndex + 1;
   let minPage = 1;
   let maxPage = totalPages;
 
@@ -54,8 +51,6 @@ export default function Agent() {
     minPage = Math.max(1, currentPage - 4);
     maxPage = Math.min(totalPages, currentPage + 5);
   }
-
-  // Adjust minPage if the difference between maxPage and currentPage is less than 5
   if (maxPage - currentPage < 5) {
     minPage = Math.max(1, maxPage - 9);
   }

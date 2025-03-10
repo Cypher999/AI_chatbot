@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { User } from "lucide-react"
 import Input from "./ui/input";
 import PasswordInput from "./shared/passwordInput";
+import { checkUser } from "@/utils/services/login";
 export default function Login() {
   const [form, setForm] = useState({ name: "",password: ""})
   const [error, setError] = useState("")
@@ -28,7 +29,14 @@ export default function Login() {
     if (res?.error) {
       setError("Invalid username or password");
     } else {
-      router.push("/");
+      const pushPath=await checkUser(form.name)
+      console.log(pushPath)
+      if(!pushPath.error){
+        router.push(`/${pushPath.data.role}`)
+      }
+      else{
+        setError(pushPath.error)
+      }
     }
   };
 

@@ -1,15 +1,15 @@
 import prisma from "../prismaClient";
 import {UserType} from "@prisma/client"
 export const getAll=function (params=null){
-    return prisma.users.findMany(params);
+    return prisma.users.findMany(params!==null&&{...params});
 }
 
 export const count=function (params=null){
-    return prisma.users.count(params);
+    return prisma.users.count(params!==null&&{...params});
 }
 
 export const getOne=function (params=null){
-    return prisma.users.findFirst(params);
+    return prisma.users.findFirst(params!==null&&{...params});
 }
 
 export const add=function (data){

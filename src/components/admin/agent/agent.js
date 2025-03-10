@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,28 +8,23 @@ import {
   getFilteredRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
 import Input from "@/components/ui/input";
-
-// Sample data
-const data = Array.from({ length: 60 }, (_, i) => ({
-  id: i + 1,
-  name: `User  ${i + 1}`,
-  email: `user${i + 1}@example.com`,
-  role: ["Admin", "User ", "Moderator"][i % 3], // Cycles through roles
-}));
+import { getAll } from "@/utils/services/admin/agent";
+import Button from "@/components/ui/button";
 
 const columns = [
   { accessorKey: "id", header: "ID" },
-  { accessorKey: "name", header: "Name" },
-  { accessorKey: "email", header: "Email" },
-  { accessorKey: "role", header: "Role" },
+  { accessorKey: "name", header: "agent name" },
+  { accessorKey: "description", header: "description" },
 ];
-
 export default function Agent() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
-
+  const [data, setData] = useState([]);
+  const [totalCount, setTotalCount] = useState(0); 
+  const [maxPage,setMaxPage]=useState(0)
+  const [minPage,setMinPage]=useState(0)
   const table = useReactTable({
     data,
     columns,
@@ -40,28 +35,52 @@ export default function Agent() {
     getFilteredRowModel: getFilteredRowModel(),
     onGlobalFilterChange: setGlobalFilter,
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getAll(pagination.pageIndex, pagination.pageSize, globalFilter);
+      setData(result.data);
+      setTotalCount(result.totalCount);
+  
+      // Calculate total pages based on the new totalCount
+      const totalPages = Math.ceil(result.totalCount / pagination.pageSize);
+      const currentPage = pagination.pageIndex + 1; // Convert to 1-based index
+  
+      // Calculate minPage and maxPage
+      let newMinPage = 1;
+      let newMaxPage = totalPages;
+  
+      if (currentPage >= 6) {
+        newMinPage = Math.max(1, currentPage - 4);
+        newMaxPage = Math.min(totalPages, currentPage + 5);
+      }
+  
+      // Adjust minPage if the difference between maxPage and currentPage is less than 5
+      if (newMaxPage - currentPage < 5) {
+        newMinPage = Math.max(1, newMaxPage - 9);
+      }
+  
+      // Update state for minPage and maxPage only if they have changed
+      if (newMinPage !== minPage || newMaxPage !== maxPage) {
+        setMinPage(newMinPage);
+        setMaxPage(newMaxPage);
+      }
+    };
+  
+    fetchData();
+  }, [pagination.pageIndex, pagination.pageSize, globalFilter]);
 
-  const totalPages = table.getPageCount();
-  const currentPage = pagination.pageIndex + 1; // Convert to 1-based index
-
-  // Calculate min and max page numbers
-  let minPage = 1;
-  let maxPage = totalPages;
-
-  if (currentPage >= 6) {
-    minPage = Math.max(1, currentPage - 4);
-    maxPage = Math.min(totalPages, currentPage + 5);
-  }
-
-  // Adjust minPage if the difference between maxPage and currentPage is less than 5
-  if (maxPage - currentPage < 5) {
-    minPage = Math.max(1, maxPage - 9);
-  }
+  
 
   return (
     <div className="p-6 w-full max-w-4xl mx-auto shadow-xl bg-gray-800 rounded-md">
-      {/* Search & Page Size */}
+       <Button
+          className="px-3 py-2 mb-4"
+        >
+          <Plus size={16} />
+          <span className="ml-2">Add new Agent</span>
+        </Button>
       <div className="block md:flex justify-between items-center mb-4">
+     
         <Input
           icon={<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />}
           type="text"
