@@ -5,12 +5,11 @@ export async function middleware(req) {
     const token = await getToken({
         req,
         secret: process.env.NEXTAUTH_SECRET,
-        raw: true, // Allows parsing from raw cookies
         cookieName: "ai-chatbot-token", // Set your custom cookie name here
       });
   if (!token) {
     if (req.nextUrl.pathname.startsWith("/admin")||req.nextUrl.pathname.startsWith("/user")) {
-        return NextResponse.redirect(new URL("/login?token="+token, req.url));
+        return NextResponse.redirect(new URL("/login", req.url));
     }
     if (req.nextUrl.pathname.startsWith("/api/admin")||req.nextUrl.pathname.startsWith("/api/user")) {
       return NextResponse.json({error:'not found'}, { status: 404 });

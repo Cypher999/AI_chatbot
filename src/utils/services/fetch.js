@@ -11,7 +11,11 @@ export async function get(url) {
 
 export async function post(url, formData) {
   try {
-    const response = await axios.post(url, formData);
+    const response = await axios.post(url, formData,{
+      headers: {
+        'Content-Type': 'multipart/form-data', 
+      },
+    });
     return response.data;
   } catch (error) {
     return error.response.data
@@ -25,7 +29,11 @@ export async function put(url, formData) {
       formData=new FormData()
     }
     
-    const response = await axios.put(url, formData);
+    const response = await axios.put(url, formData,{
+      headers: {
+        'Content-Type': 'multipart/form-data', 
+      },
+    });
     return response.data;
   } catch (error) {
     return error.response.data

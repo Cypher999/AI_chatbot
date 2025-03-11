@@ -14,7 +14,7 @@ export default function DesktopMenu({
                 <HomeIcon size={20} className="" />
                 {
                     showMenu && 
-                    <span className="ml-3">
+                    <span className="ml-3 truncate overflow-hidden whitespace-nowrap">
                     Home
                     </span>
                 }
@@ -23,7 +23,7 @@ export default function DesktopMenu({
                 <Bot size={20} className="" />
                 {
                     showMenu && 
-                    <span className="ml-3">
+                    <span className="ml-3 truncate overflow-hidden whitespace-nowrap">
                     AI Agent
                     </span>
                 }
@@ -32,7 +32,7 @@ export default function DesktopMenu({
                 <Users size={20} className="" />
                 {
                     showMenu && 
-                    <span className="ml-3">
+                    <span className="ml-3 truncate overflow-hidden whitespace-nowrap">
                     User
                     </span>
                 }
