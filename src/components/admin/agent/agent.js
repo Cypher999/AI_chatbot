@@ -10,27 +10,28 @@ import {
 } from "@tanstack/react-table";
 import { BotIcon, BotOff, Check, ChevronLeft, ChevronRight, Edit, Plus, Search, Trash,X } from "lucide-react";
 import Input from "@/components/ui/input";
-import { getAll } from "@/utils/services/admin/agent";
+import { getAll, remove } from "@/utils/services/admin/agent";
 import Button from "@/components/ui/button";
 import ModalAdd from "./modalAdd";
 import Swal from "sweetalert2";
 import { toggleBot } from "@/utils/services/admin/agent";
 import Loading from "@/components/shared/loading";
+import ModalEdit from "./modalEdit";
 export default function Agent() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [showAdd, setShowAdd] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showEdit, setShowEdit] = useState(false);
-  const [editId, setEditId] = useState(0);
+  const [editId, setEditId] = useState(null);
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
   const [data, setData] = useState([]); 
   const [maxPage,setMaxPage]=useState(0)
   const [totalCount,setTotalCount]=useState(0)
   const [minPage,setMinPage]=useState(0)
-  const handleToggleBot=async function(id){
+  const handleToggleBot=async function(id,enable){
     Swal.fire({
-      title: 'Enable',
-      text: `Enable bot with id ${id}?`,
+      title: enable?'disable':'Enable',
+      text: `${enable?'disable':'enable'}  bot with id ${id}?`,
       icon:'question',
       background: "var(--color-gray-800)",
       color: "#fff",
@@ -66,6 +67,45 @@ export default function Agent() {
 
   })
   }
+  const handleDelete=async function(id,enable){
+    Swal.fire({
+      title: 'Confirm Delete',
+      text: `delete  bot with id ${id}?`,
+      icon:'question',
+      background: "var(--color-gray-800)",
+      color: "#fff",
+      showCancelButton: true,
+      confirmButtonText: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"></path></svg> <span class="ml-3">Yes</span>`,
+      cancelButtonText: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg> <span class="ml-3">Cancel</span>`,
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'relative flex items-center border border-1 rounded p-2 cursor-pointer transition border-green-600 text-green-600 hover:bg-green-600 hover:text-white  px-3 py-1 mx-2',
+        cancelButton: 'relative flex items-center border border-1 rounded p-2 cursor-pointer transition border-red-600 text-red-600 hover:bg-red-600 hover:text-white  px-3 py-1 mx-2'
+      },
+  }).then(async (e) => {
+      if(e.isConfirmed){
+          setLoading(true)
+          const req=await remove(id)
+          if(req.status==="success"){
+              Swal.fire({
+                toast: true,
+                position: "top-end", // Position to bottom-right
+                icon: "success",
+                title: "Bot has Been deleted!",
+                showConfirmButton: false,
+                timer: 3000, // Auto-close after 3 seconds
+                timerProgressBar: true,
+                background: "#343a40", // Dark theme
+                color: "#fff", // White text
+                
+              });
+            fetchData();
+          }
+          
+      }
+
+  })
+  }
   const columns = [
     { accessorKey: "id", header: "ID" },
     { accessorKey: "name", header: "agent name" },
@@ -91,7 +131,7 @@ export default function Agent() {
           outline={true}
           variant="danger"
             onClick={()=>{
-              setShowAdd(true)
+              handleDelete(row.original.id)
             }}
             className="px-3 py-1"
           >
@@ -172,13 +212,15 @@ export default function Agent() {
   };
   useEffect(() => {
     fetchData();
-  }, [pagination.pageIndex, pagination.pageSize, globalFilter]);
+    console.log(pagination)
+  }, [pagination.pageIndex,pagination.pageSize,globalFilter]);
 
   
 
   return (
     <>
       <ModalAdd onSubmit={async()=>{await fetchData()}} show={showAdd} setShow={setShowAdd}/>
+      <ModalEdit onSubmit={async()=>{await fetchData()}} show={showEdit} setShow={setShowEdit} id={editId}/>
       <div className="p-6 w-full max-w-4xl mx-auto shadow-xl bg-gray-800 rounded-md">
        <Button
           onClick={()=>{

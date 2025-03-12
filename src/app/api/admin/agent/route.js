@@ -3,8 +3,8 @@ import { getToken } from "next-auth/jwt";
 import Joi from "joi";
 const schema = Joi.object({
   name: Joi.string().min(3).max(50).required(),
-  context: Joi.string().min(5).required(),
-  description: Joi.string().optional(),
+  context: Joi.string().min(3).required(),
+  description: Joi.string().min(3).optional(),
 });
 export async function GET(req) {
   try {
@@ -52,13 +52,14 @@ export async function GET(req) {
 }
 
 export async function POST(req){
-  const data=await req.formData();
-  const formData = {
-    name: data.get("name"),
-    context: data.get("context"),
-    description: data.get("description") || "",
+  let formData=await req.formData();
+  formData = {
+    name: formData.get("name"),
+    context: formData.get("context"),
+    description: formData.get("description") || "",
   };
   const { error } = schema.validate(formData,{ abortEarly: false });
+  formData['enable']=false;
   if (error) {
     const validationErrors = error.details.reduce((acc, detail) => {
       const key = detail.path[0]; // Get the field name
@@ -79,15 +80,12 @@ export async function POST(req){
   
   const checkData=await count({
     where:{
-      name:data.get('name')
+      name:formData.name
     }
   })
   if(checkData>0) return Response.json({status:"error",message:'data already exists'},{status:500})
   const newData=await add({
-    name:data.get('name'),
-    context:data.get('context'),
-    description:data.get('description'),
-    enable:false,
+    ...formData,
     user:{
       connect:{
         id:token.id

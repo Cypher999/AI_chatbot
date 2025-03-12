@@ -14,7 +14,7 @@ enum UserType {
 
 model users{
   id            Int   @id @default(autoincrement())
-  username      String?  @unique
+  username      String?  @unique @db.VarChar(50)
   password String?
   photo String? @default("man.jpg")
   role     UserType
@@ -24,7 +24,7 @@ model users{
 model agent{
   id Int @id @default(autoincrement())
   userId Int 
-  name String
+  name String @db.VarChar(50)
   context String @db.LongText
   description String @db.VarChar(100)
   enable Boolean
@@ -36,7 +36,7 @@ model agent{
 model knowledge{
   id Int @id @default(autoincrement())
   agentId Int 
-  label String
+  label String @db.VarChar(50)
   content String
   createdAt DateTime @default(now())
   agent agent @relation(fields:[agentId],references: [id] ,onDelete: Cascade, onUpdate: Cascade)

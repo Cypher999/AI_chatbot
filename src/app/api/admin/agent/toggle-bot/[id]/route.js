@@ -1,7 +1,7 @@
 import { getOne,update } from "@/utils/db/agent"
 export async function PUT(req,{params}) {
   try {
-    let {id}=params;
+    let {id}=await params;
     id=parseInt(id)
     const oldData=await getOne({
       where:{id}

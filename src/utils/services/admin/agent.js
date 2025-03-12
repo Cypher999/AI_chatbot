@@ -10,6 +10,21 @@ export const add=async function(fr){
     return req
 }
 
+export const getOne=async function(id){
+    const req=await get(`/api/admin/agent/${id}`)
+    return req
+}
+
+export const update=async function(id,fr){
+    const req=await put(`/api/admin/agent/${id}`,fr)
+    return req
+}
+
+export const remove=async function(id){
+    const req=await del(`/api/admin/agent/${id}`)
+    return req
+}
+
 export const toggleBot=async function(id){
     const req=await put(`/api/admin/agent/toggle-bot/${id}`)
     return req
