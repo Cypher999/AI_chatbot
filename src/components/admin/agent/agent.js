@@ -8,42 +8,127 @@ import {
   getFilteredRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
+import { BotIcon, BotOff, Check, ChevronLeft, ChevronRight, Edit, Plus, Search, Trash,X } from "lucide-react";
 import Input from "@/components/ui/input";
 import { getAll } from "@/utils/services/admin/agent";
 import Button from "@/components/ui/button";
 import ModalAdd from "./modalAdd";
-const columns = [
-  { accessorKey: "id", header: "ID" },
-  { accessorKey: "name", header: "agent name" },
-  { accessorKey: "description", header: "description" },
-  {
-    header: "Actions",
-    id: "actions", // Unique ID for this column
-    cell: ({ row }) => (
-      <div className="flex space-x-2">
-        <button 
-          className="px-2 py-1 bg-blue-500 text-white rounded-md"
-        >
-          Edit
-        </button>
-        <button 
-          className="px-2 py-1 bg-red-500 text-white rounded-md"
-        >
-          Delete
-        </button>
-      </div>
-    ),
-  },
-];
+import Swal from "sweetalert2";
+import { toggleBot } from "@/utils/services/admin/agent";
+import Loading from "@/components/shared/loading";
 export default function Agent() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [showAdd, setShowAdd] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [showEdit, setShowEdit] = useState(false);
+  const [editId, setEditId] = useState(0);
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
   const [data, setData] = useState([]); 
   const [maxPage,setMaxPage]=useState(0)
   const [totalCount,setTotalCount]=useState(0)
   const [minPage,setMinPage]=useState(0)
+  const handleToggleBot=async function(id){
+    Swal.fire({
+      title: 'Enable',
+      text: `Enable bot with id ${id}?`,
+      icon:'question',
+      background: "var(--color-gray-800)",
+      color: "#fff",
+      showCancelButton: true,
+      confirmButtonText: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"></path></svg> <span class="ml-3">Yes</span>`,
+      cancelButtonText: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg> <span class="ml-3">Cancel</span>`,
+      buttonsStyling: false,
+      customClass: {
+        confirmButton: 'relative flex items-center border border-1 rounded p-2 cursor-pointer transition border-green-600 text-green-600 hover:bg-green-600 hover:text-white  px-3 py-1 mx-2',
+        cancelButton: 'relative flex items-center border border-1 rounded p-2 cursor-pointer transition border-red-600 text-red-600 hover:bg-red-600 hover:text-white  px-3 py-1 mx-2'
+      },
+  }).then(async (e) => {
+      if(e.isConfirmed){
+          setLoading(true)
+          const req=await toggleBot(id)
+          if(req.status==="success"){
+              Swal.fire({
+                toast: true,
+                position: "top-end", // Position to bottom-right
+                icon: "success",
+                title: "Bot has Been enabled!",
+                showConfirmButton: false,
+                timer: 3000, // Auto-close after 3 seconds
+                timerProgressBar: true,
+                background: "#343a40", // Dark theme
+                color: "#fff", // White text
+                
+              });
+            await fetchData()
+          }
+          
+      }
+
+  })
+  }
+  const columns = [
+    { accessorKey: "id", header: "ID" },
+    { accessorKey: "name", header: "agent name" },
+    { accessorKey: "description", header: "description" },
+    {
+      header: "Actions",
+      id: "actions", // Unique ID for this column
+      cell: ({ row }) => (
+        <div className="flex space-x-2">
+          <Button
+            outline={true}
+            variant="secondary"
+            onClick={()=>{
+              setShowEdit(true)
+              setEditId(row.original.id)
+            }}
+            className="px-3 py-1"
+          >
+            <Edit size={16} />
+            <span className="ml-2">Edit</span>
+          </Button>
+          <Button
+          outline={true}
+          variant="danger"
+            onClick={()=>{
+              setShowAdd(true)
+            }}
+            className="px-3 py-1"
+          >
+            <Trash size={16} />
+            <span className="ml-2">Delete</span>
+          </Button>
+          {
+            row.original.enable
+            ?
+            <Button
+              outline={true}
+              variant="danger"
+                onClick={()=>{
+                  handleToggleBot(row.original.id,row.original.enable)
+                }}
+                className="px-3 py-1"
+              >
+                <BotOff size={16} />
+                <span className="ml-2">Disable Bot</span>
+            </Button>
+            :
+            <Button
+              outline={true}
+              variant="success"
+                onClick={()=>{
+                  handleToggleBot(row.original.id,row.original.enable)
+                }}
+                className="px-3 py-1"
+              >
+                <BotIcon size={16} />
+                <span className="ml-2">Enable Bot</span>
+            </Button>
+          }
+        </div>
+      ),
+    },
+  ];
   const table = useReactTable({
     data,
     columns,
@@ -55,12 +140,13 @@ export default function Agent() {
     onGlobalFilterChange: setGlobalFilter,
   });
   const fetchData = async () => {
+    setLoading(true)
     const result = await getAll(pagination.pageIndex, pagination.pageSize, globalFilter);
     setData(result.data);
-    setTotalCount(result.totalCount);
+    setTotalCount(result.metadata.totalCount);
 
     // Calculate total pages based on the new totalCount
-    const totalPages = Math.ceil(result.totalCount / pagination.pageSize);
+    const totalPages = Math.ceil(result.metadata.totalCount / pagination.pageSize);
     const currentPage = pagination.pageIndex + 1; // Convert to 1-based index
 
     // Calculate minPage and maxPage
@@ -82,6 +168,7 @@ export default function Agent() {
       setMinPage(newMinPage);
       setMaxPage(newMaxPage);
     }
+    setLoading(false)
   };
   useEffect(() => {
     fetchData();
@@ -97,11 +184,13 @@ export default function Agent() {
           onClick={()=>{
             setShowAdd(true)
           }}
-          className="px-3 py-2 mb-4"
+          outline={true}
+          className="px-3 py-1 mb-4"
         >
           <Plus size={16} />
           <span className="ml-2">Add new Agent</span>
         </Button>
+        
         <div className="block md:flex justify-between items-center mb-4">
       
           <Input
@@ -139,23 +228,35 @@ export default function Agent() {
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className="border-b hover:bg-gray-700">
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="px-4 py-2">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              ) : (
+              {
+                loading
+                ?
                 <tr>
-                  <td colSpan={columns.length} className="px-4 py-2 text-center">
-                    No data found
+                  <td colSpan={columns.length}>
+                    <Loading/>
                   </td>
                 </tr>
-              )}
+                :
+                <>
+                  {table.getRowModel().rows.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <tr key={row.id} className="border-b hover:bg-gray-700">
+                        {row.getVisibleCells().map((cell) => (
+                          <td key={cell.id} className="px-4 py-2">
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={columns.length} className="px-4 py-2 text-center">
+                        No data found
+                      </td>
+                    </tr>
+                  )}
+                </>
+              }
             </tbody>
           </table>
         </div>

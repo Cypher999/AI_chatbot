@@ -1,4 +1,4 @@
-import { getAll,count,add,getOn } from "@/utils/db/agent"
+import { getAll,count,add } from "@/utils/db/agent"
 import { getToken } from "next-auth/jwt";
 import Joi from "joi";
 const schema = Joi.object({
@@ -44,10 +44,10 @@ export async function GET(req) {
         take: pageSize,
     });
     const totalPage=Math.ceil(totalCount/size)
-    return Response.json({ data,totalCount,totalPage,page }, { status: 200 })
+    return Response.json({ status:'success',data,metadata:{totalCount,totalPage,page} }, { status: 200 })
   } catch (error) {
     console.log(error)
-    return Response.json({ error: "Encountered an error" }, { status: 500 })
+    return Response.json({ status:"error",message: "Encountered an error" }, { status: 500 })
   }
 }
 
@@ -69,20 +69,20 @@ export async function POST(req){
       return acc;
     }, {});
   
-    return Response.json({ validation_error: validationErrors }, { status: 500 });
+    return Response.json({ status:"validation error",message:"data incomplete",data: validationErrors }, { status: 500 });
   }
   const token = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET,
     cookieName: "ai-chatbot-token", 
   });
-  console.log(token)
+  
   const checkData=await count({
     where:{
       name:data.get('name')
     }
   })
-  if(checkData>0) return Response.json({error:'data already exists'},{status:500})
+  if(checkData>0) return Response.json({status:"error",message:'data already exists'},{status:500})
   const newData=await add({
     name:data.get('name'),
     context:data.get('context'),
@@ -94,6 +94,6 @@ export async function POST(req){
       }
     }
   });
-  if(!newData) return Response.json({error:'error when saving data'},{status:500})
-  return Response.json({message:'AI Agent has been saved',newData},{status:200})
+  if(!newData) return Response.json({status:"error",message:'error when saving data'},{status:500})
+  return Response.json({status:"success",message:'AI Agent has been saved',newData},{status:200})
 }

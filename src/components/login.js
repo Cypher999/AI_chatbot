@@ -6,9 +6,11 @@ import { User } from "lucide-react"
 import Input from "./ui/input";
 import PasswordInput from "./shared/passwordInput";
 import { checkUser } from "@/utils/services/login";
+import Loading from "./shared/loading";
 export default function Login() {
   const [form, setForm] = useState({ name: "",password: ""})
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
     const handleForm=function(e){
         setForm(n=>({
@@ -17,6 +19,8 @@ export default function Login() {
         }))
     }
   const handleSubmit = async (e) => {
+    if(loading) return 0;
+    setLoading(true)
     e.preventDefault();
     setError("");
 
@@ -32,12 +36,13 @@ export default function Login() {
       const pushPath=await checkUser(form.name)
       console.log(pushPath)
       if(!pushPath.error){
-        router.push(`/${pushPath.data.role}`)
+        window.location.href=`/${pushPath.data.role}`
       }
       else{
         setError(pushPath.error)
       }
     }
+    setLoading(false)
   };
 
   return (
@@ -63,9 +68,15 @@ export default function Login() {
                 />
 
                 {/* Submit Button */}
-                <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-semibold transition">
-                Sign In
-                </button>
+                {
+                  loading
+                  ?
+                  <Loading/>
+                  :
+                  <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-semibold transition">
+                    Log In
+                  </button>
+                }
             </form>
         </div>
     </div>

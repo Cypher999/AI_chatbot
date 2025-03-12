@@ -37,7 +37,7 @@ export const Modal=function ({show,children}) {
             <motion.div
                 className="bg-gray-800 text-white rounded-lg shadow-lg w-96"
                 initial={{ y: -350, opacity: 0, scale: 0.9 }} 
-                animate={{ y: -150, opacity: 1, scale: 1 }} 
+                animate={{ y: -100, opacity: 1, scale: 1 }} 
                 exit={{ y: -350, opacity: 0, scale: 0.9 }} 
                 transition={{ duration: 0.3, ease: "easeInOut" }}
             >

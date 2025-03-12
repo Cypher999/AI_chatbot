@@ -9,3 +9,8 @@ export const add=async function(fr){
     const req=await post(`/api/admin/agent`,fr)
     return req
 }
+
+export const toggleBot=async function(id){
+    const req=await put(`/api/admin/agent/toggle-bot/${id}`)
+    return req
+}

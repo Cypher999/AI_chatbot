@@ -1,9 +1,9 @@
-import Home from "@/components/admin/home/home";
+import Dashboard from "@/components/admin/dashboard/dashboard";
 export const metadata = {
     title: "Dashboard",
   };
 export default function (){
     return (
-        <Home/>
+        <Dashboard/>
     )
 }

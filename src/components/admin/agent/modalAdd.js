@@ -7,6 +7,8 @@ import { Modal,Header,Body,Footer } from "@/components/ui/modal";
 import TextArea from "@/components/ui/textArea";
 import Button from "@/components/ui/button";
 import { add } from "@/utils/services/admin/agent";
+import Loading from "@/components/shared/loading";
+import Swal from "sweetalert2";
 export default function ModalAdd({show,setShow,onSubmit}) {
   const [loading,setLoading]=useState(false);
   const [modalData,setModalData]=useState({
@@ -36,12 +38,22 @@ export default function ModalAdd({show,setShow,onSubmit}) {
       const res = await add(fr);
       
       setLoading(false)
-      if (res?.error) {
-        alert(res.error);
-      } else if(res?.validation_error){
-        setError(res?.validation_error)
+      if (res.status=="error") {
+        alert(res.message);
+      } else if(res.status=="validation error"){
+        setError(res.data)
       }else {
-        alert(res.message)
+        Swal.fire({
+          toast: true,
+          position: "top-end", // Position to bottom-right
+          icon: "success",
+          title: res.message,
+          showConfirmButton: false,
+          timer: 3000, // Auto-close after 3 seconds
+          timerProgressBar: true,
+          background: "#343a40", // Dark theme
+          color: "#fff", // White text
+        });
         setShow(false)
         setModalData({
           name:"",
@@ -104,13 +116,11 @@ export default function ModalAdd({show,setShow,onSubmit}) {
               <div className="mb-3 text-red-500" key={index}>{item}</div>
             ))
           }
-          <Button type="submit" className="mt-3 w-1/4">
+          <Button outline={true} type="submit" className="mt-3 w-1/4">
             {
               loading
               ?
-              <div className="flex items-center justify-center">
-                <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-              </div>
+              <Loading/>
               :
               <>
                 <Save size={16}/>
