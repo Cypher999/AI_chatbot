@@ -5,7 +5,7 @@ import DesktopMenu from "./desktopMenu";
 import MobileMenu from "./mobileMenu";
 import Header from "./header";
 export default function Layout({children}) {
-  const [showMenu,setShowMenu]=useState(true);
+  const [showMenu,setShowMenu]=useState(false);
   return (
   <div className="min-h-screen h-full bg-gray-900 text-teal-400">
     <Header setShowMenu={setShowMenu}/>
