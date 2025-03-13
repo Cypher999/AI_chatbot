@@ -1,10 +1,8 @@
-import { count,add, getOne, update, remove } from "@/utils/db/agent"
-import { getToken } from "next-auth/jwt";
+import { count,add, getOne, update, remove } from "@/utils/db/knowledge"
 import Joi from "joi";
 const schema = Joi.object({
-  name: Joi.string().min(3).max(50).required(),
-  context: Joi.string().min(5).required(),
-  description: Joi.string().optional(),
+  label: Joi.string().min(3).max(50).required(),
+  content: Joi.string().min(5).required(),
 });
 export async function GET(req,{params}) {
   try {
@@ -24,18 +22,17 @@ export async function GET(req,{params}) {
 }
 
 export async function PUT(req,{params}){
-    let {id}=await params;
-    id=parseInt(id)
+  const {id}=parseInt((await params).id);
+  const {agentId}=parseInt((await params).agentId);
   let formData=await req.formData();
   formData = {
-    name: formData.get("name"),
-    context: formData.get("context"),
-    description: formData.get("description") || "",
+    label: formData.get("label"),
+    content: formData.get("content"),
   };
   const { error } = schema.validate(formData,{ abortEarly: false });
   if (error) {
     const validationErrors = error.details.reduce((acc, detail) => {
-      const key = detail.path[0]; // Get the field name
+      const key = detail.path[0]; // Get the field label
       if (!acc[key]) {
         acc[key] = []; // Initialize as an array if not exists
       }
@@ -53,14 +50,15 @@ export async function PUT(req,{params}){
   if(!oldData) return Response.json({ status:'error',message:'data not found' }, { status: 404 })
   const checkData=await count({
     where:{
-      name:formData.name
+      label:formData.label,
+      agentId
     }
   })
-  if(checkData>0&&oldData.name!=formData.name) return Response.json({status:"error",message:'data already exists'},{status:500})
+  if(checkData>0&&oldData.label!=formData.label) return Response.json({status:"error",message:'data already exists'},{status:500})
   const newData=await update(
     formData,{id});
   if(!newData) return Response.json({status:"error",message:'error when updating data'},{status:500})
-  return Response.json({status:"success",message:'AI Agent has been updated',newData},{status:200})
+  return Response.json({status:"success",message:'knowledge has been updated',newData},{status:200})
 }
 
 export async function DELETE(req,{params}){
@@ -75,5 +73,5 @@ export async function DELETE(req,{params}){
   const newData=await remove(
     {id});
   if(!newData) return Response.json({status:"error",message:'error when updating data'},{status:500})
-  return Response.json({status:"success",message:'AI Agent has been deleted'},{status:200})
+  return Response.json({status:"success",message:'knowledge has been deleted'},{status:200})
 }
