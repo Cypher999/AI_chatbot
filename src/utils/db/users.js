@@ -35,6 +35,6 @@ export const update=function (data,where=null){
 }
 
 export const remove=function (where=null){
-    const user = prisma.users.delete(where)
+    const user = prisma.users.delete({where})
     return user
 }
