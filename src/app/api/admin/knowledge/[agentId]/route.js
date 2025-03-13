@@ -7,13 +7,13 @@ const schema = Joi.object({
   content: Joi.string().min(3).required(),
 });
 export async function GET(req,{params}) {
-  const {agentId}=parseInt((await params).agentId);
-  const agentData=await getOneAgent({
+  const agentId=parseInt((await params).agentId);
+  const agentData=await countAgent({
     where:{
       id:agentId
     }
   })
-  if(!agentData) return Response.json({ status:'error',message:'Agent ID not found' }, { status: 404 })
+  if(agentData<=0) return Response.json({ status:'error',message:'Agent ID not found' }, { status: 404 })
   try {
     const { searchParams } = new URL(req.url);
     const page = searchParams.get("page") || 0;
@@ -42,7 +42,7 @@ export async function GET(req,{params}) {
         take: pageSize,
     });
     const totalPage=Math.ceil(totalCount/size)
-    return Response.json({ status:'success',agentData,data,metadata:{totalCount,totalPage,page} }, { status: 200 })
+    return Response.json({ status:'success',data,metadata:{totalCount,totalPage,page} }, { status: 200 })
   } catch (error) {
     console.log(error)
     return Response.json({ status:"error",message: "Encountered an error" }, { status: 500 })
@@ -50,7 +50,9 @@ export async function GET(req,{params}) {
 }
 
 export async function POST(req,{params}){
-  const {agentId}=parseInt((await params).agentId);
+  const agentId=parseInt((await params).agentId);
+  console.log("agent id is ")
+  console.log(agentId)
   const checkAgent=await countAgent({
     where:{
       id:agentId
@@ -62,7 +64,6 @@ export async function POST(req,{params}){
     label: formData.get("label"),
     content: formData.get("content"),
   };
-  formData['agentId']=agentId
   const { error } = schema.validate(formData,{ abortEarly: false });
   if (error) {
     const validationErrors = error.details.reduce((acc, detail) => {

@@ -14,7 +14,7 @@ enum UserType {
 
 model users{
   id            Int   @id @default(autoincrement())
-  username      String?  @unique @db.VarChar(50)
+  username      String  @unique @db.VarChar(50)
   password String?
   photo String? @default("man.jpg")
   role     UserType

@@ -1,11 +1,13 @@
 import Button from "@/components/ui/button"
-import { BotIcon, BotOff, Edit,  Trash,} from "lucide-react";
+import { BotIcon, BotOff, Edit,  ListCollapse,  Trash,} from "lucide-react";
+import { useRouter } from "next/navigation";
 export default function Options({
     onEdit,
     onDelete,
     onToggleBot,
     item
 }){
+    const router=useRouter()
     return (
         <div className="flex space-x-2 my-2 lg:my-0">
         <Button
@@ -57,6 +59,17 @@ export default function Options({
                 <span className="ml-2">Enable Bot</span>
             </Button>
         }
+        <Button
+        outline={true}
+        variant="success"
+            onClick={()=>{
+                router.push(`/admin/knowledge/${item.id}`)
+            }}
+            className="px-3 py-1"
+        >
+            <ListCollapse size={16} />
+            <span className="ml-2">Knowledge list</span>
+        </Button>
     </div>
     )
 }
