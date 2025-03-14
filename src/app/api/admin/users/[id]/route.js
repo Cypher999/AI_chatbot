@@ -1,11 +1,7 @@
-import { count,add, getOne, update, remove } from "@/utils/db/agent"
-import { getToken } from "next-auth/jwt";
+import { count, getOne, update, remove } from "@/utils/db/users"
 import Joi from "joi";
-const schema = Joi.object({
-  name: Joi.string().min(3).max(50).required(),
-  context: Joi.string().min(5).required(),
-  description: Joi.string().optional(),
-});
+import {writeFile,existsSync, unlinkSync} from "fs"
+import path from "path";
 export async function GET(req,{params}) {
   try {
     let id=parseInt((await params).id);
@@ -23,55 +19,24 @@ export async function GET(req,{params}) {
   }
 }
 
-export async function PUT(req,{params}){
-    let id=parseInt((await params).id);
-  let formData=await req.formData();
-  formData = {
-    name: formData.get("name"),
-    context: formData.get("context"),
-    description: formData.get("description") || "",
-  };
-  const { error } = schema.validate(formData,{ abortEarly: false });
-  if (error) {
-    const validationErrors = error.details.reduce((acc, detail) => {
-      const key = detail.path[0]; // Get the field name
-      if (!acc[key]) {
-        acc[key] = []; // Initialize as an array if not exists
-      }
-      acc[key].push(detail.message); // Push the error message
-      return acc;
-    }, {});
-  
-    return Response.json({ status:"validation error",message:"data incomplete",data: validationErrors }, { status: 500 });
-  }
-  const oldData=await getOne({
-    where: {
-        id
-    },
-    });
-  if(!oldData) return Response.json({ status:'error',message:'data not found' }, { status: 404 })
-  const checkData=await count({
-    where:{
-      name:formData.name
-    }
-  })
-  if(checkData>0&&oldData.name!=formData.name) return Response.json({status:"error",message:'data already exists'},{status:500})
-  const newData=await update(
-    formData,{id});
-  if(!newData) return Response.json({status:"error",message:'error when updating data'},{status:500})
-  return Response.json({status:"success",message:'AI Agent has been updated',newData},{status:200})
-}
-
 export async function DELETE(req,{params}){
     let id=parseInt((await params).id);
-  const checkData=await count({
+  const checkData=await getOne({
     where:{
       id
     }
   })
-  if(checkData<0) return Response.json({status:"error",message:'data not found'},{status:404})
+  if(!checkData) return Response.json({status:"error",message:'data not found'},{status:404})
+    if(checkData.photo!='man.jpg'){
+      const checkFileExists=existsSync(path.join(process.cwd(), "public/image/user/" + checkData.photo))
+      if(checkFileExists){
+        await unlinkSync(
+          path.join(process.cwd(), "public/image/user/" + checkData.photo)
+        )
+      }
+    }
   const newData=await remove(
     {id});
-  if(!newData) return Response.json({status:"error",message:'error when updating data'},{status:500})
-  return Response.json({status:"success",message:'AI Agent has been deleted'},{status:200})
+  if(!newData) return Response.json({status:"error",message:'error when deleting data'},{status:500})
+  return Response.json({status:"success",message:'User has been deleted'},{status:200})
 }

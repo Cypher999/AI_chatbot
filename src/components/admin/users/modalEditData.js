@@ -1,14 +1,14 @@
 "use client"
 import { useEffect, useState } from "react";
 import Input from "@/components/ui/input";
-import { User, Save, ImageIcon, X } from "lucide-react";
-import { Modal,Header,Body,Footer } from "@/components/ui/modal";
-import PasswordInput from "@/components/shared/passwordInput";
+import { User, Save, ImageIcon,LucideUserCheck, X } from "lucide-react";
+import { Modal,Header,Body } from "@/components/ui/modal";
+import Select from "@/components/ui/select";
 import Button from "@/components/ui/button";
-import { getOne,update } from "@/utils/services/admin/agent";
+import { getOne,updateData } from "@/utils/services/admin/users";
 import Loading from "@/components/shared/loading";
 import Swal from "sweetalert2";
-export default function ModalEdit({show,setShow,onSubmit,id}) {
+export default function ModalEditData({show,setShow,onSubmit,id}) {
   const [loading,setLoading]=useState(false);
   const [modalData,setModalData]=useState({
     username:"",
@@ -43,8 +43,8 @@ export default function ModalEdit({show,setShow,onSubmit,id}) {
       const fr=new FormData()
       fr.append('username',modalData.username)
       fr.append('role',modalData.role)
-      if(modalData.photo!==null) fr.append('photo',modalData.photo)
-      const result = await update(id,fr);
+      if(modalData.photo) fr.append('photo',modalData.photo)
+      const result = await updateData(id,fr);
       
       setLoading(false)
       if (result.status=="error") {
@@ -65,10 +65,11 @@ export default function ModalEdit({show,setShow,onSubmit,id}) {
         });
         setShow(false)
         setModalData({
-          name:"",
-          context:"",
-          description:""
+          username:"",
+          role:"",
+          photo:null
         })
+        setPreview(null)
         await onSubmit()
       }
       
@@ -92,8 +93,12 @@ export default function ModalEdit({show,setShow,onSubmit,id}) {
             setShow(false)
             return 0;
         }
-        setModalData(result.data);
-        
+        console.log(result.data)
+        setModalData(n=>({
+          ...result.data,
+          photo:null
+        }));
+        setPreview(`/image/user/${result.data.photo}`)
         setLoading(false)
     };
     useEffect(()=>{
@@ -118,7 +123,7 @@ export default function ModalEdit({show,setShow,onSubmit,id}) {
             <form onSubmit={handleSubmit} className="max-h-96 p-3 overflow-auto flex flex-col">
          <Input
                      name="username"
-                     placeholder="Agent Name"
+                     placeholder="Username"
                      onChange={handleChange}
                      value={modalData.username}
                      icon={<User size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>}
@@ -130,41 +135,23 @@ export default function ModalEdit({show,setShow,onSubmit,id}) {
                        <div className="mb-3 text-red-500" key={index}>{item}</div>
                      ))
                    }
-                   <PasswordInput
-                     name="password"
-                     placeholder="Password"
-                     onChange={handleChange}
-                     value={modalData.password}
-                   />
-                   {
-                     error.password
-                     &&
-                     error.password.map((item,index)=>(
-                       <div className="mb-3 text-red-500" key={index}>{item}</div>
-                     ))
-                   }
-                   <PasswordInput
-                     name="confirm"
-                     placeholder="Confirm Password"
-                     onChange={handleChange}
-                     value={modalData.confirm}
-                   />
-                   {
-                     error.confirm
-                     &&
-                     error.confirm.map((item,index)=>(
-                       <div className="mb-3 text-red-500" key={index}>{item}</div>
-                     ))
-                   }
-                   {/* Image Upload Section */}
-                   <label className="mt-3 text-sm font-medium text-gray-700">Profile Picture</label>
-                   <div className="flex items-center space-x-3">
-                     <input name="photo" type="file" accept="image/*" onChange={handleChange} className="hidden" id="upload" />
-                     <label htmlFor="upload" className="cursor-pointer flex items-center space-x-2 border px-3 py-2 rounded-md shadow-sm bg-white hover:bg-gray-100">
-                       <ImageIcon size={16} />
-                       <span>Select Image</span>
-                     </label>
-                   </div>
+                   <Select 
+                    icon={
+                      <LucideUserCheck size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>
+                    } name="role" value={modalData.role} onChange={handleChange}>
+                      <option value="">--Select Role--</option>
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </Select>
+                    {/* Image Upload Section */}
+                    <label className="mt-3 text-sm font-medium text-white">Profile Picture</label>
+                    <div className="flex items-center space-x-3">
+                      <input name="photo" type="file" accept="image/*" onChange={handleChange} className="hidden" id="upload" />
+                      <label htmlFor="upload" className="cursor-pointer flex items-center space-x-2 border px-3 py-2 rounded-md shadow-sm bg-gray-700 hover:bg-gray-500 transition">
+                        <ImageIcon size={16} />
+                        <span className="ml-3">Select Image</span>
+                      </label>
+                    </div>
                    
                    {/* Image Preview */}
                    {preview && (
@@ -173,7 +160,7 @@ export default function ModalEdit({show,setShow,onSubmit,id}) {
                      </div>
                    )}
          
-                   {error.image && error.image.map((item, index) => (
+                   {error.photo && error.photo.map((item, index) => (
                      <div className="mb-3 text-red-500" key={index}>{item}</div>
                    ))}
           <Button outline={true} type="submit" className="mt-3 w-1/4">

@@ -155,7 +155,7 @@ export default function Agent() {
     <>
       <ModalAdd onSubmit={async()=>{await fetchData()}} show={showAdd} setShow={setShowAdd}/>
       <ModalEdit onSubmit={async()=>{await fetchData()}} show={showEdit} setShow={setShowEdit} id={editId}/>
-      <div className="p-6 w-full max-w-4xl mx-auto shadow-xl bg-gray-800 rounded-md">
+      <div className="p-6 w-full  shadow-xl bg-gray-800 rounded-md">
        <Button
           onClick={()=>{
             setShowAdd(true)

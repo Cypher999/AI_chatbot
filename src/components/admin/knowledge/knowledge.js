@@ -135,7 +135,7 @@ export default function Knowledge({agentId}) {
     <>
       <ModalAdd agentId={agentId} onSubmit={async()=>{await fetchData()}} show={showAdd} setShow={setShowAdd}/>
       <ModalEdit agentId={agentId} onSubmit={async()=>{await fetchData()}} show={showEdit} setShow={setShowEdit} id={editId}/>
-      <div className="p-6 w-full max-w-4xl mx-auto shadow-xl bg-gray-800 rounded-md">
+      <div className="p-6 w-full  shadow-xl bg-gray-800 rounded-md">
         <div className="mb-3">
           <h2 className="text-lg font-bold text-gray-100">Knowledge list of {agentData?.name}</h2>
         </div>

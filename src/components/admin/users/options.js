@@ -1,11 +1,10 @@
 import Button from "@/components/ui/button"
-import { BotIcon, BotOff, Edit,  ListCollapse,  Trash,} from "lucide-react";
+import { BotIcon, BotOff, Edit,  ListCollapse,  Lock,  Trash,} from "lucide-react";
 import { useRouter } from "next/navigation";
 export default function Options({
     onEditData,
     onDelete,
-    onEditPassword,
-    item
+    onEditPassword
 }){
     const router=useRouter()
     return (
@@ -19,7 +18,18 @@ export default function Options({
             className="px-3 py-1"
         >
             <Edit size={16} />
-            <span className="ml-2">Edit</span>
+            <span className="ml-2">Edit Data</span>
+        </Button>
+        <Button
+            outline={true}
+            variant="secondary"
+            onClick={()=>{
+                onEditPassword()
+            }}
+            className="px-3 py-1"
+        >
+            <Lock size={16} />
+            <span className="ml-2">Edit Password</span>
         </Button>
         <Button
         outline={true}

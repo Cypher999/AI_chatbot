@@ -52,7 +52,8 @@ export default function ModalAdd({show,setShow,onSubmit}) {
       fr.append('password',modalData.password)
       fr.append('confirm',modalData.confirm)
       fr.append('role',modalData.role)
-      if(modalData.photo!==null) fr.append('photo',modalData.photo)
+      console.log(modalData.photo)
+      if(modalData.photo) fr.append('photo',modalData.photo)
       const res = await add(fr);
       
       setLoading(false)
@@ -76,8 +77,10 @@ export default function ModalAdd({show,setShow,onSubmit}) {
         setModalData({
           username:"",
           password:"",
-          confirm:""
+          confirm:"",
+          photo:null,
         })
+        setPreview(null)
         await onSubmit()
       }
       
@@ -85,7 +88,7 @@ export default function ModalAdd({show,setShow,onSubmit}) {
   return (
     <Modal show={show}>
       <Header className='flex items-center'>
-        <h2 className="text-lg font-bold">Add AI Agent</h2>
+        <h2 className="text-lg font-bold">Add Users</h2>
         <Button className="text-red" onClick={() => setShow(false)}>
           <X size={16} color="red"/>
         </Button>
@@ -157,7 +160,7 @@ export default function ModalAdd({show,setShow,onSubmit}) {
             </div>
           )}
 
-          {error.image && error.image.map((item, index) => (
+          {error.photo && error.photo.map((item, index) => (
             <div className="mb-3 text-red-500" key={index}>{item}</div>
           ))}
           <Button outline={true} type="submit" className="mt-3 w-1/4">

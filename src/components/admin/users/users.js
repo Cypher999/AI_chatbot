@@ -2,24 +2,23 @@
 
 import { useEffect, useState } from "react";
 import {  Plus } from "lucide-react";
-import Input from "@/components/ui/input";
 import { getAll, remove } from "@/utils/services/admin/users";
 import Button from "@/components/ui/button";
 import ModalAdd from "./modalAdd";
 import Swal from "sweetalert2";
-import { toggleBot } from "@/utils/services/admin/agent";
-import Loading from "@/components/shared/loading";
 import ModalEditData from "./modalEditData";
 import FilterTable from "@/components/shared/filterTable";
-import { Table, TBody, TD, TH, THead } from "@/components/ui/table";
+import { Table, TBody } from "@/components/ui/table";
 import { BodyRow, Head, NoData, TLoading } from "./tableData";
 import Options from "./options";
 import TablePagination from "@/components/shared/tablePagination";
+import ModalEditPassword from "./modalEditPassword";
 export default function Users() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [showAdd, setShowAdd] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [showEdit, setShowEdit] = useState(false);
+  const [showEditData, setShowEditData] = useState(false);
+  const [showEditPassword, setShowEditPassword] = useState(false);
   const [editId, setEditId] = useState(null);
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
   const [data, setData] = useState([]); 
@@ -50,7 +49,7 @@ export default function Users() {
                 toast: true,
                 position: "top-end", // Position to bottom-right
                 icon: "success",
-                title: "Bot has Been deleted!",
+                title: req.message,
                 showConfirmButton: false,
                 timer: 3000, // Auto-close after 3 seconds
                 timerProgressBar: true,
@@ -65,8 +64,12 @@ export default function Users() {
 
   })
   }
-  const handleEdit=function(id){
-    setShowEdit(true)
+  const handleEditData=function(id){
+    setShowEditData(true)
+    setEditId(id)
+  }
+  const handleEditPassword=function(id){
+    setShowEditPassword(true)
     setEditId(id)
   }
   const fetchData = async () => {
@@ -115,8 +118,9 @@ export default function Users() {
   return (
     <>
       <ModalAdd onSubmit={async()=>{await fetchData()}} show={showAdd} setShow={setShowAdd}/>
-      <ModalEditData onSubmit={async()=>{await fetchData()}} show={showEdit} setShow={setShowEdit} id={editId}/>
-      <div className="p-6 w-full max-w-4xl mx-auto shadow-xl bg-gray-800 rounded-md">
+      <ModalEditData onSubmit={async()=>{await fetchData()}} show={showEditData} setShow={setShowEditData} id={editId}/>
+      <ModalEditPassword onSubmit={async()=>{await fetchData()}} show={showEditPassword} setShow={setShowEditPassword} id={editId}/>
+      <div className="p-6 w-full  shadow-xl bg-gray-800 rounded-md">
        <Button
           onClick={()=>{
             setShowAdd(true)
@@ -153,8 +157,11 @@ export default function Users() {
                           options={
                             <Options
                               item={item}
-                              onEdit={()=>{
-                                handleEdit(item.id)
+                              onEditData={()=>{
+                                handleEditData(item.id)
+                              }}
+                              onEditPassword={()=>{
+                                handleEditPassword(item.id)
                               }}
                               onDelete={()=>{
                                 handleDelete(item.id)
