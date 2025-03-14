@@ -2,73 +2,33 @@
 
 import { useEffect, useState } from "react";
 import {  Plus } from "lucide-react";
-import Input from "@/components/ui/input";
-import { getAll, remove } from "@/utils/services/admin/agent";
+import { getAll, remove } from "@/utils/services/admin/users";
 import Button from "@/components/ui/button";
 import ModalAdd from "./modalAdd";
 import Swal from "sweetalert2";
-import { toggleBot } from "@/utils/services/admin/agent";
-import Loading from "@/components/shared/loading";
-import ModalEdit from "./modalEdit";
+import ModalEditData from "./modalEditData";
 import FilterTable from "@/components/shared/filterTable";
-import { Table, TBody, TD, TH, THead } from "@/components/ui/table";
+import { Table, TBody } from "@/components/ui/table";
 import { BodyRow, Head, NoData, TLoading } from "./tableData";
 import Options from "./options";
 import TablePagination from "@/components/shared/tablePagination";
-export default function Agent() {
+import ModalEditPassword from "./modalEditPassword";
+export default function Users() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [showAdd, setShowAdd] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [showEdit, setShowEdit] = useState(false);
+  const [showEditData, setShowEditData] = useState(false);
+  const [showEditPassword, setShowEditPassword] = useState(false);
   const [editId, setEditId] = useState(null);
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
   const [data, setData] = useState([]); 
   const [maxPage,setMaxPage]=useState(0)
   const [totalCount,setTotalCount]=useState(0)
   const [minPage,setMinPage]=useState(0)
-  const handleToggleBot=async function(id,enable){
-    Swal.fire({
-      title: enable?'disable':'Enable',
-      text: `${enable?'disable':'enable'}  bot with id ${id}?`,
-      icon:'question',
-      background: "var(--color-gray-800)",
-      color: "#fff",
-      showCancelButton: true,
-      confirmButtonText: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"></path></svg> <span class="ml-3">Yes</span>`,
-      cancelButtonText: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg> <span class="ml-3">Cancel</span>`,
-      buttonsStyling: false,
-      customClass: {
-        confirmButton: 'relative flex items-center border border-1 rounded p-2 cursor-pointer transition border-green-600 text-green-600 hover:bg-green-600 hover:text-white  px-3 py-1 mx-2',
-        cancelButton: 'relative flex items-center border border-1 rounded p-2 cursor-pointer transition border-red-600 text-red-600 hover:bg-red-600 hover:text-white  px-3 py-1 mx-2'
-      },
-  }).then(async (e) => {
-      if(e.isConfirmed){
-          setLoading(true)
-          const req=await toggleBot(id)
-          if(req.status==="success"){
-              Swal.fire({
-                toast: true,
-                position: "top-end", // Position to bottom-right
-                icon: "success",
-                title: req.message,
-                showConfirmButton: false,
-                timer: 3000, // Auto-close after 3 seconds
-                timerProgressBar: true,
-                background: "#343a40", // Dark theme
-                color: "#fff", // White text
-                
-              });
-            await fetchData()
-          }
-          
-      }
-
-  })
-  }
   const handleDelete=async function(id){
     Swal.fire({
       title: 'Confirm Delete',
-      text: `delete  bot with id ${id}?`,
+      text: `delete  user with id ${id}?`,
       icon:'question',
       background: "var(--color-gray-800)",
       color: "#fff",
@@ -89,7 +49,7 @@ export default function Agent() {
                 toast: true,
                 position: "top-end", // Position to bottom-right
                 icon: "success",
-                title: "Bot has Been deleted!",
+                title: req.message,
                 showConfirmButton: false,
                 timer: 3000, // Auto-close after 3 seconds
                 timerProgressBar: true,
@@ -104,8 +64,12 @@ export default function Agent() {
 
   })
   }
-  const handleEdit=function(id){
-    setShowEdit(true)
+  const handleEditData=function(id){
+    setShowEditData(true)
+    setEditId(id)
+  }
+  const handleEditPassword=function(id){
+    setShowEditPassword(true)
     setEditId(id)
   }
   const fetchData = async () => {
@@ -154,7 +118,8 @@ export default function Agent() {
   return (
     <>
       <ModalAdd onSubmit={async()=>{await fetchData()}} show={showAdd} setShow={setShowAdd}/>
-      <ModalEdit onSubmit={async()=>{await fetchData()}} show={showEdit} setShow={setShowEdit} id={editId}/>
+      <ModalEditData onSubmit={async()=>{await fetchData()}} show={showEditData} setShow={setShowEditData} id={editId}/>
+      <ModalEditPassword onSubmit={async()=>{await fetchData()}} show={showEditPassword} setShow={setShowEditPassword} id={editId}/>
       <div className="p-6 w-full  shadow-xl bg-gray-800 rounded-md">
        <Button
           onClick={()=>{
@@ -164,7 +129,7 @@ export default function Agent() {
           className="px-3 py-1 mb-4"
         >
           <Plus size={16} />
-          <span className="ml-2">Add new Agent</span>
+          <span className="ml-2">Add new User</span>
         </Button>
         <FilterTable
           onInputChange={(e) => setGlobalFilter(e.target.value)}
@@ -192,11 +157,11 @@ export default function Agent() {
                           options={
                             <Options
                               item={item}
-                              onToggleBot={()=>{
-                                handleToggleBot(item.id,item.enable)
+                              onEditData={()=>{
+                                handleEditData(item.id)
                               }}
-                              onEdit={()=>{
-                                handleEdit(item.id)
+                              onEditPassword={()=>{
+                                handleEditPassword(item.id)
                               }}
                               onDelete={()=>{
                                 handleDelete(item.id)

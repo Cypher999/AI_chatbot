@@ -8,7 +8,7 @@ const schema = Joi.object({
 });
 export async function GET(req,{params}) {
   try {
-    let {id}=await params;
+    let id=parseInt((await params).id);
     id=parseInt(id)
     const data=await getOne({
         where: {
@@ -24,8 +24,7 @@ export async function GET(req,{params}) {
 }
 
 export async function PUT(req,{params}){
-    let {id}=await params;
-    id=parseInt(id)
+    let id=parseInt((await params).id);
   let formData=await req.formData();
   formData = {
     name: formData.get("name"),
@@ -64,8 +63,7 @@ export async function PUT(req,{params}){
 }
 
 export async function DELETE(req,{params}){
-    let {id}=await params;
-    id=parseInt(id)
+    let id=parseInt((await params).id);
   const checkData=await count({
     where:{
       id

@@ -5,7 +5,7 @@ export default function PasswordInput({onChange,name,label,placeholder,required}
     const [show,setShow]=useState(false);
     const eyeClass="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
     return (
-        <div className="relative">
+        <div className="relative mb-3">
             {label &&<label>{label}</label>}
             <div className={`"relative ${label ? "mt-3":""}"`}>
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />

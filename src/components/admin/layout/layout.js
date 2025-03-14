@@ -12,7 +12,8 @@ export default function Layout({children}) {
     <div className="w-full flex">
       <DesktopMenu showMenu={showMenu}/>
       <div className={`w-full h-[80vh] md:h-[90vh] overflow-auto ${showMenu ? "md:w-6/8 lg:w-7/8" : "md:w-14/16 lg:w-15/16"} transition-all duration-300 ease-in-out p-8`}>
-        {children}
+      {children}
+        
       </div>
     </div>
     <MobileMenu/>
