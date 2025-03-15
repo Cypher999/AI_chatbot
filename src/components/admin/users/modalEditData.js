@@ -123,6 +123,7 @@ export default function ModalEditData({show,setShow,onSubmit,id}) {
             <form onSubmit={handleSubmit} className="max-h-96 p-3 overflow-auto flex flex-col">
          <Input
                      name="username"
+                     label="username"
                      placeholder="Username"
                      onChange={handleChange}
                      value={modalData.username}
@@ -136,6 +137,7 @@ export default function ModalEditData({show,setShow,onSubmit,id}) {
                      ))
                    }
                    <Select 
+                   label="user's role"
                     icon={
                       <LucideUserCheck size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>
                     } name="role" value={modalData.role} onChange={handleChange}>

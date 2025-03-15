@@ -36,8 +36,9 @@ model agent{
 model knowledge{
   id Int @id @default(autoincrement())
   agentId Int 
-  label String @db.VarChar(50)
-  content String
+  content String @db.Text
+  embedding Json 
   createdAt DateTime @default(now())
+  @@fulltext([content]) 
   agent agent @relation(fields:[agentId],references: [id] ,onDelete: Cascade, onUpdate: Cascade)
 }

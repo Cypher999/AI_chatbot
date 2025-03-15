@@ -97,6 +97,7 @@ export default function ModalAdd({show,setShow,onSubmit}) {
         <form onSubmit={handleSubmit} className="max-h-96 p-3 overflow-auto flex flex-col">
           <Input
             name="username"
+            label="username"
             placeholder="User Name"
             onChange={handleChange}
             value={modalData.username}
@@ -111,6 +112,7 @@ export default function ModalAdd({show,setShow,onSubmit}) {
           }
           <PasswordInput
             name="password"
+            label="password"
             placeholder="Password"
             onChange={handleChange}
             value={modalData.password}
@@ -124,6 +126,7 @@ export default function ModalAdd({show,setShow,onSubmit}) {
           }
           <PasswordInput
             name="confirm"
+            label="confirm password"
             placeholder="Confirm Password"
             onChange={handleChange}
             value={modalData.confirm}
@@ -136,6 +139,7 @@ export default function ModalAdd({show,setShow,onSubmit}) {
             ))
           }
           <Select 
+          label="user role"
           icon={
             <LucideUserCheck size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>
           } name="role" onChange={handleChange}>

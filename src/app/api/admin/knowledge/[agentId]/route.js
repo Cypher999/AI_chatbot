@@ -1,9 +1,9 @@
 import { getAll,count,add } from "@/utils/db/knowledge";
 import { getOne as  getOneAgent,count as countAgent} from "@/utils/db/agent";
-import { getToken } from "next-auth/jwt";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
 import Joi from "joi";
 const schema = Joi.object({
-  label: Joi.string().min(3).max(50).required(),
   content: Joi.string().min(3).required(),
 });
 export async function GET(req,{params}) {
@@ -26,7 +26,6 @@ export async function GET(req,{params}) {
         where: {
           agentId,
           OR: [
-              { label: { contains: filter } },
               { content: { contains: filter } },
           ],
         },
@@ -34,7 +33,6 @@ export async function GET(req,{params}) {
     const data=await getAll({where: {
         agentId,
           OR: [
-              { label: { contains: filter } },
               { content: { contains: filter } },
           ],
         },
@@ -50,6 +48,8 @@ export async function GET(req,{params}) {
 }
 
 export async function POST(req,{params}){
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
+  const model = genAI.getGenerativeModel({ model: "models/embedding-001" });
   const agentId=parseInt((await params).agentId);
   console.log("agent id is ")
   console.log(agentId)
@@ -61,7 +61,6 @@ export async function POST(req,{params}){
   if(checkAgent<=0) return Response.json({ status:'error',message:'Agent ID not found' }, { status: 404 })
   let formData=await req.formData();
   formData = {
-    label: formData.get("label"),
     content: formData.get("content"),
   };
   const { error } = schema.validate(formData,{ abortEarly: false });
@@ -77,13 +76,10 @@ export async function POST(req,{params}){
   
     return Response.json({ status:"validation error",message:"data incomplete",data: validationErrors }, { status: 500 });
   }
-  const checkData=await count({
-    where:{
-      label:formData.label,
-      agentId
-    }
-  })
-  if(checkData>0) return Response.json({status:"error",message:'data already exists'},{status:500})
+  const embeddingResponse = await model.embedContent({
+    content: { parts: [{ text: formData.content }] }
+  });
+  formData.embedding = embeddingResponse.embedding.values; 
   const newData=await add({
     ...formData,
     agent:{

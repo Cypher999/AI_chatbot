@@ -8,9 +8,6 @@ export const Head=function(){
                 {"#"}
             </TH>
             <TH>
-                Label
-            </TH>
-            <TH>
                 Content
             </TH>
             <TH>
@@ -34,9 +31,6 @@ export const BodyRow=function({index,pagination,item,options}){
         <TBody.TR>
             <TD>
                 {(index+1)+(pagination.pageSize*pagination.pageIndex)}
-            </TD>
-            <TD>
-                {item.label}
             </TD>
             <TD>
                 {item.content}

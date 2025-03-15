@@ -77,6 +77,7 @@ export default function ModalEditPassword({show,setShow,onSubmit,id}) {
             <form onSubmit={handleSubmit} className="max-h-96 p-3 overflow-auto flex flex-col">
                    <PasswordInput
                      name="password"
+                     label="password"
                      placeholder="Password"
                      onChange={handleChange}
                      value={modalData.password}
@@ -90,6 +91,7 @@ export default function ModalEditPassword({show,setShow,onSubmit,id}) {
                    }
                    <PasswordInput
                      name="confirm"
+                     label="confirm password"
                      placeholder="Confirm Password"
                      onChange={handleChange}
                      value={modalData.confirm}

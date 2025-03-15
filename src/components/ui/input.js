@@ -2,7 +2,7 @@
 export default function Input({icon,className,label,...props}){
     return (
         <div className={`relative mb-3 ${className?className:""}`}>
-            {label &&<label>{label}</label>}
+            {label &&<label className="text-white">{label}</label>}
             <div className={`relative ${label ? "mt-3":""}`}>
                 {icon}
                 <input

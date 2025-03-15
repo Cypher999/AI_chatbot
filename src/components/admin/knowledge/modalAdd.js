@@ -11,11 +11,9 @@ import Swal from "sweetalert2";
 export default function ModalAdd({show,setShow,onSubmit,agentId}) {
   const [loading,setLoading]=useState(false);
   const [modalData,setModalData]=useState({
-    label:"",
     content:""
   })
   const [error,setError]=useState({
-    label:[],
     content:[]
   })
   const handleChange=function(e){
@@ -29,7 +27,6 @@ export default function ModalAdd({show,setShow,onSubmit,agentId}) {
       setLoading(true)
       e.preventDefault();
       const fr=new FormData()
-      fr.append('label',modalData.label)
       fr.append('content',modalData.content)
       const res = await add(agentId,fr);
       
@@ -52,7 +49,6 @@ export default function ModalAdd({show,setShow,onSubmit,agentId}) {
         });
         setShow(false)
         setModalData({
-          label:"",
           content:""
         })
         await onSubmit()
@@ -69,22 +65,9 @@ export default function ModalAdd({show,setShow,onSubmit,agentId}) {
       </Header>
       <Body>
         <form onSubmit={handleSubmit} className="max-h-96 p-3 overflow-auto flex flex-col">
-          <Input
-            name="label"
-            placeholder="Label"
-            onChange={handleChange}
-            value={modalData.label}
-            icon={<CircuitBoard size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>}
-          />
-          {
-            error.label
-            &&
-            error.label.map((item,index)=>(
-              <div className="mb-3 text-red-500" key={index}>{item}</div>
-            ))
-          }
           <TextArea
             name="content"
+            label="content"
             placeholder="Content"
             onChange={handleChange}
             value={modalData.content}

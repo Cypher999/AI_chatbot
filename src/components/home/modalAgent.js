@@ -1,10 +1,26 @@
 "use client"
+import Loading from "../shared/loading";
 import { Modal,Header,Body } from "../ui/modal";
+import { agentList } from "@/utils/services/public";
+import { useState,useEffect } from "react";
 export default function ModalAgent({show,setShow,setAgent}) {
+    const [loading,setLoading]=useState(true)
+    const [data,setData]=useState([])
     const handleAgent=function(agent){
         setAgent(agent)
         setShow(false);
     }
+    const readAgent=async()=>{
+        setLoading(true);
+        let req=await agentList();
+        if(req.status=="success"){
+            setData(req.data)
+        }
+        setLoading(false);
+    }
+    useEffect(()=>{
+        readAgent();
+    },[])
   return (
     <Modal show={show}>
       <Header>
@@ -17,30 +33,22 @@ export default function ModalAgent({show,setShow,setAgent}) {
           </button>
       </Header>
       <Body>
-        <div type="button" onClick={()=>{handleAgent('jamal')}} className="rounded border p-2 my-2 border-gray-700 hover:bg-gray-200 cursor-pointer">
-            <div className="font-bold text-lg">
-                Jamal
-            </div>
-            <div className="text-sm">
-                this is the description
-            </div>
-        </div>
-        <div type="button" onClick={()=>{handleAgent('dobleh')}} className="rounded border p-2 my-2 border-gray-700 hover:bg-gray-200 cursor-pointer">
-            <div className="font-bold text-lg">
-                dobleh
-            </div>
-            <div className="text-sm">
-                this is the description
-            </div>
-        </div>
-        <div type="button" onClick={()=>{handleAgent('Kabur')}} className="rounded border p-2 my-2 border-gray-700 hover:bg-gray-200 cursor-pointer">
-            <div className="font-bold text-lg">
-                Kabur
-            </div>
-            <div className="text-sm">
-                this is the description
-            </div>
-        </div>
+        {
+            loading
+            ?
+            <Loading/>
+            :
+            data.map((item,index)=>(
+                <div key={index} type="button" onClick={()=>{handleAgent(item)}} className="rounded border p-2 my-2 border-gray-700 hover:text-black hover:bg-gray-200 cursor-pointer">
+                    <div className="font-bold text-lg">
+                        {item.name}
+                    </div>
+                    <div className="text-sm">
+                        {item.description}
+                    </div>
+                </div>
+            ))
+        }
       </Body>
     </Modal>
   );

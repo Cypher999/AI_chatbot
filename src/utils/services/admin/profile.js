@@ -5,12 +5,12 @@ export const getOne=async function(id){
     return req
 }
 
-export const updateData=async function(id,fr){
+export const updateData=async function(fr){
     const req=await put(`/api/admin/profile/update-data`,fr)
     return req
 }
 
-export const updatePassword=async function(id,fr){
+export const updatePassword=async function(fr){
     const req=await put(`/api/admin/profile/update-password`,fr)
     return req
 }

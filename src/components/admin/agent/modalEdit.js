@@ -108,6 +108,7 @@ export default function ModalEdit({show,setShow,onSubmit,id}) {
             <form onSubmit={handleSubmit} className="max-h-96 p-3 overflow-auto flex flex-col">
           <Input
             name="name"
+            label="agent name"
             placeholder="Agent Name"
             onChange={handleChange}
             value={modalData.name}
@@ -122,6 +123,7 @@ export default function ModalEdit({show,setShow,onSubmit,id}) {
           }
           <TextArea
             name="context"
+            label="context"
             placeholder="Context"
             onChange={handleChange}
             value={modalData.context}
@@ -136,6 +138,7 @@ export default function ModalEdit({show,setShow,onSubmit,id}) {
           }
           <TextArea
             name="description"
+            label="description"
             placeholder="Agent's Description"
             value={modalData.description}
             onChange={handleChange}

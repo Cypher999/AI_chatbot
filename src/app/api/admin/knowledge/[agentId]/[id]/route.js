@@ -1,7 +1,7 @@
 import { count,add, getOne, update, remove } from "@/utils/db/knowledge"
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 import Joi from "joi";
 const schema = Joi.object({
-  label: Joi.string().min(3).max(50).required(),
   content: Joi.string().min(5).required(),
 });
 export async function GET(req,{params}) {
@@ -23,10 +23,9 @@ export async function GET(req,{params}) {
 
 export async function PUT(req,{params}){
   const id=parseInt((await params).id);
-  const agentId=parseInt((await params).agentId);
+  const model = genAI.getGenerativeModel({ model: "models/embedding-001" });
   let formData=await req.formData();
   formData = {
-    label: formData.get("label"),
     content: formData.get("content"),
   };
   const { error } = schema.validate(formData,{ abortEarly: false });
@@ -48,13 +47,10 @@ export async function PUT(req,{params}){
     },
     });
   if(!oldData) return Response.json({ status:'error',message:'data not found' }, { status: 404 })
-  const checkData=await count({
-    where:{
-      label:formData.label,
-      agentId
-    }
-  })
-  if(checkData>0&&oldData.label!=formData.label) return Response.json({status:"error",message:'data already exists'},{status:500})
+    const embeddingResponse = await model.embedContent({
+      content: { parts: [{ text: formData.content }] }
+    });
+    formData.embedding = embeddingResponse.embedding.values; 
   const newData=await update(
     formData,{id});
   if(!newData) return Response.json({status:"error",message:'error when updating data'},{status:500})

@@ -60,6 +60,11 @@ export default function ModalAdd({show,setShow,onSubmit}) {
           context:"",
           description:""
         })
+        setError({
+          name:[],
+          context:[],
+          description:[]
+        })
         await onSubmit()
       }
       
@@ -76,6 +81,7 @@ export default function ModalAdd({show,setShow,onSubmit}) {
         <form onSubmit={handleSubmit} className="max-h-96 p-3 overflow-auto flex flex-col">
           <Input
             name="name"
+            label="Agent name"
             placeholder="Agent Name"
             onChange={handleChange}
             value={modalData.name}
@@ -90,6 +96,7 @@ export default function ModalAdd({show,setShow,onSubmit}) {
           }
           <TextArea
             name="context"
+            label="Context"
             placeholder="Context"
             onChange={handleChange}
             value={modalData.context}
@@ -104,6 +111,7 @@ export default function ModalAdd({show,setShow,onSubmit}) {
           }
           <TextArea
             name="description"
+            label="Description"
             placeholder="Agent's Description"
             value={modalData.description}
             onChange={handleChange}
