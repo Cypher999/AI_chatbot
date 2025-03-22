@@ -2,6 +2,7 @@ import { getOne } from "@/utils/db/users"
 import getToken  from "@/utils/getToken";
 export async function GET(req) {
   const token = await getToken(req);
+  console.log(token)
   try {
     const data=await getOne({
         select:{

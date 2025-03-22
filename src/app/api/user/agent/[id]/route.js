@@ -1,5 +1,5 @@
 import { count,add, getOne, update, remove } from "@/utils/db/agent"
-import getToken  from "@/utils/getToken";
+import getToken from "@/utils/getToken";
 import Joi from "joi";
 const schema = Joi.object({
   name: Joi.string().min(3).max(50).required(),
@@ -7,12 +7,14 @@ const schema = Joi.object({
   description: Joi.string().optional(),
 });
 export async function GET(req,{params}) {
+  const token = await getToken(req);
   try {
     let id=parseInt((await params).id);
     id=parseInt(id)
     const data=await getOne({
         where: {
-            id
+            id,
+            userId:token.id
         },
     });
     if(!data) return Response.json({ status:'error',message:'data not found' }, { status: 404 })
@@ -25,6 +27,7 @@ export async function GET(req,{params}) {
 
 export async function PUT(req,{params}){
     let id=parseInt((await params).id);
+  const token = await getToken(req);
   let formData=await req.formData();
   formData = {
     name: formData.get("name"),
@@ -46,7 +49,8 @@ export async function PUT(req,{params}){
   }
   const oldData=await getOne({
     where: {
-        id
+        id,
+        userId:token.id
     },
     });
   if(!oldData) return Response.json({ status:'error',message:'data not found' }, { status: 404 })
@@ -64,9 +68,11 @@ export async function PUT(req,{params}){
 
 export async function DELETE(req,{params}){
     let id=parseInt((await params).id);
+    const token = await getToken(req);
   const checkData=await count({
     where:{
-      id
+      id,
+      userId:token.id
     }
   })
   if(checkData<0) return Response.json({status:"error",message:'data not found'},{status:404})

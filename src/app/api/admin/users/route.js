@@ -1,16 +1,12 @@
 import { getAll,count,add } from "@/utils/db/users"
-import { getToken } from "next-auth/jwt";
+import getToken  from "@/utils/getToken";
 import Joi from "joi";
 import { randomBytes } from "crypto";
 import { writeFile } from "fs";
 import { hash } from "bcrypt";
 import path from "path"
 export async function GET(req) {
-  const token = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-    cookieName: "ai-chatbot-token", 
-  });
+  const token = await getToken(req);
   try {
     const { searchParams } = new URL(req.url);
     const page = searchParams.get("page") || 0;

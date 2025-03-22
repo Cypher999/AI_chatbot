@@ -1,5 +1,6 @@
 import { getAll,count,add } from "@/utils/db/agent"
 import getToken  from "@/utils/getToken";
+
 import Joi from "joi";
 const schema = Joi.object({
   name: Joi.string().min(3).max(50).required(),
@@ -7,6 +8,7 @@ const schema = Joi.object({
   description: Joi.string().min(3).optional(),
 });
 export async function GET(req) {
+  const token = await getToken(req);
   try {
     const { searchParams } = new URL(req.url);
     const page = searchParams.get("page") || 0;
@@ -17,27 +19,21 @@ export async function GET(req) {
     const pageSize = parseInt(size);
     const totalCount = await count({
         where: {
+          userId:token.id,
         OR: [
             { name: { contains: filter } },
             { context: { contains: filter } },
             { description: { contains: filter } },
-            {user: {
-                 username: { contains: filter } 
-              },
-        }
         ],
         },
     });
     const data=await getAll({
         where: {
+          userId:token.id,
         OR: [
             { name: { contains: filter } },
             { context: { contains: filter } },
             { description: { contains: filter } },
-            {user: {
-                 username: { contains: filter } 
-              },
-        }
         ],
         },
         skip: pageIndex * pageSize,

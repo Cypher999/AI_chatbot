@@ -46,6 +46,7 @@ async function searchKnowledge(agentId, query) {
     .slice(0, 5);  
   return rankedResults.slice(0, 5);
 }
+const chatHistory={};
 export async function POST(req,{params}){
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
   let agentId=parseInt((await params).agentId);
@@ -68,23 +69,40 @@ export async function POST(req,{params}){
     where: {
         id:agentId,
         enable:true
+    },
+    include:{
+      user:{
+        select:{
+          username:true
+        }
+      }
     }
     });
     if(!data) return Response.json({ status:'error',message:'agent not found or disabled' }, { status: 404 })
     const knowledgeBase=await searchKnowledge(agentId,prompt)
-  console.log(knowledgeBase.map(item=>item.content))
  let context = `
-    Nama anda adalah ${data.name} , namun anda tidak perlu menyebutkan nama anda jika tidak ada yang menanyakan
+    Nama anda adalah ${data.name} dan anda dibuat oleh ${data.user.username}, namun anda tidak perlu menyebutkan nama anda jika tidak ada yang menanyakan
     identitas anda, 
-
     ${data.context}
     berikut adalah informasi tambahan yang bisa anda pakai, 
-    dimana setiap informasi dibuat dalam bentuk json dengan dua objek, label dan content :
     ${JSON.stringify(knowledgeBase.map(item=>item.content))}
+    ${chatHistory[data.name]
+      ?
+      `
+        berikut adalah riwayat percakapan sebelumnya
+        ${chatHistory[data.name].join('\n')}
+      `
+      :
+      ``
+    }
     Harap jawab pertanyaan berikut berdasarkan informasi di atas:
     ${prompt}
   `;
   const result = await model.generateContent(context);
   if(!result) return Response.json({ status:'error',message:'error when generating answer' }, { status: 500 })
+  if(!chatHistory[data.name]) chatHistory[data.name]=[];
+  chatHistory[data.name].push(`user :${prompt}`)
+  chatHistory[data.name].push(`AI :${result.response.text()}`)
+  if(chatHistory.length>8) chatHistory.shift();
   return Response.json({status:"success",data:result.response.text()},{status:200})
 }

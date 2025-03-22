@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import {  ArrowLeftCircle, Plus } from "lucide-react";
-import { getOne as getOneAgent } from "@/utils/services/admin/agent";
-import { getAll, remove } from "@/utils/services/admin/knowledge";
+import { getOne as getOneAgent } from "@/utils/services/user/agent";
+import { getAll, remove } from "@/utils/services/user/knowledge";
 import Button from "@/components/ui/button";
 import ModalAdd from "./modalAdd";
 import Swal from "sweetalert2";

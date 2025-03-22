@@ -3,7 +3,7 @@ import {  Menu,ChevronDown } from "lucide-react";
 import { useState,useEffect } from "react";
 import ProfileMenu from "./profileMenu";
 import Button from "@/components/ui/button";
-import { getOne } from "@/utils/services/admin/profile";
+import { getOne } from "@/utils/services/user/profile";
 import Loading from "@/components/shared/loading";
 export default function Header({
     setShowMenu
@@ -28,12 +28,13 @@ export default function Header({
         <div className="w-full items-center justify-between flex bg-gray-700 p-4">
             <div className="flex items-center">
                 <Button
+                className="hidden md:block"
                 onClick={()=>{setShowMenu(n=>!n)}} 
                     outline={true}
                 >
                     <Menu size={20}/>
                 </Button>
-                <div className="text-lg font-semibold ml-4">Admin Panel</div>
+                <div className="text-lg font-semibold ml-4">Member Area</div>
             </div>
             <div className="relative">
                 {

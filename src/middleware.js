@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import getToken  from "@/utils/getToken";
 
 export async function middleware(req) {
-    const token = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
-        cookieName: "ai-chatbot-token", // Set your custom cookie name here
-      });
+    const token = await getToken(req);
   if (!token) {
     if (req.nextUrl.pathname.startsWith("/admin")||req.nextUrl.pathname.startsWith("/user")) {
         return NextResponse.redirect(new URL("/login", req.url));

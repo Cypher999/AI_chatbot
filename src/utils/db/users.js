@@ -8,8 +8,8 @@ export const count=function (params=null){
     return prisma.users.count(params!==null&&{...params});
 }
 
-export const getOne=function (params=null){
-    return prisma.users.findFirst(params!==null&&{...params});
+export const getOne=async function (params=null){
+    return prisma.users.findFirst(params!==null?{...params}:{});
 }
 
 export const add=function (data){
